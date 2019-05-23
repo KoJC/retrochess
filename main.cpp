@@ -6,7 +6,6 @@ int i;
 int main() 
 {
     cout << "Hello, World!\n\n";
-    cout << "Hello, World2!\n\n";
     i=0;
     while (i<10){
         i++;
