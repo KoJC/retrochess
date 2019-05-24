@@ -12,5 +12,7 @@ int main()
          cout << i;
     }
 
+    cout << "Ausgabe";
+
     return 0;
 }
