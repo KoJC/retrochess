@@ -12,7 +12,5 @@ int main()
          cout << i;
     }
 
-    //Hallo Knonrad"""""
-
     return 0;
 }
