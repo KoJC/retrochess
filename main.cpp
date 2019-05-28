@@ -1,18 +1,68 @@
+//damit der Compiler bei fopen() keinen Fehler anzeigt ("function unsafe")
+#define _CRT_SECURE_NO_DEPRECATE
+
+#include<stdio.h>
 #include<iostream>
+
+//Einbindung aller weiteren Funktionen aus den anderen cpp-Dateien
+#include "header.h"
+
 using namespace std;
 
-int i;
+void startpos(char feld[8][8]);
 
-int main() 
-{
-    cout << "Hello, World!!\n\n";
-    i=0;
-    while (i<10){
-        i++;
-         cout << i;
-    }
+int main() {
+	int eingabe;
+	char feld[8][8];
 
-    cout << "Ausgabe";
+	//Startbildschrim
+	cout << "						RETROSCHACH" << endl << endl << endl;
+	cout << "Willkommen zu dem etwas rustikalerem Schachspiel" << endl;
+	cout << "Folgende Funktionen sind verfügbar:\n(0)Beenden\n(1) Neues Spiel\n(2) Laden\n(3) Speichern\n(4) Hilfe" << endl;
+	cout << "Befehlszeile: ";
+	cin >> eingabe;
 
-    return 0;
+	//Menü des Spiels
+	switch (eingabe) {
+	case 0: 
+		return 0;
+		break;
+	case 1:
+		//Einlesen der Startpostítionen
+		startpos(feld);
+		//Darstellung des Brettes
+		schachbrett(feld);
+		break;
+	case 2:
+		break; 
+	case 3:
+			break;
+	case 4:
+		break;
+	default:
+		cout << "Ungültige Eingabe" << endl;
+		break;
+	}
+
+	//Darstellung des Brettes
+	schachbrett(feld);
+
+	return 0;
+}
+
+
+//Übergabe der Figuren beim Neustarten eines Spiels an das feld-array
+//schwarze Figuren werden hierbei als Kleinbuchstaben, weiße als Großbuchstaben gekennzeichnet
+void startpos(char feld[8][8]) {
+	char start[8][8] = { {'T','S','L','D','K','L','S','T'},
+						{'B','B','B','B','B','B','B','B'},
+						{},{},{},{},
+						{'b','b','b','b','b','b','b','b'},
+						{'t','s','l','d','k','l','s','t'} };
+
+	for (int a = 0; a < 8; a++) {
+		for (int b = 0; b < 8; b++) {
+			feld[a][b] = start[a][b];
+		}
+	}
 }
