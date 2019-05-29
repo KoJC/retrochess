@@ -11,6 +11,7 @@ using namespace std;
 
 void startpos(char feld[8][8]);
 
+
 int main() {
 	int eingabe;
 	char feld[8][8];
@@ -34,8 +35,10 @@ int main() {
 		schachbrett(feld);
 		break;
 	case 2:
+        laden(feld);
 		break; 
 	case 3:
+        speichern(feld);
 			break;
 	case 4:
 		break;
@@ -43,9 +46,6 @@ int main() {
 		cout << "Ungültige Eingabe" << endl;
 		break;
 	}
-
-	//Darstellung des Brettes
-	schachbrett(feld);
 
 	return 0;
 }

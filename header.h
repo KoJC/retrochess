@@ -4,8 +4,8 @@
 #ifndef HEADER_H
 #define HEADER_H
 
-void schachbrett(char feld[8][8]);
-void speichern(char feld[8][8]);
-void laden(char feld[8][8]);
+void schachbrett(char feld[][8]);
+void speichern(char feld[][8]);
+void laden(char feld[][8]);
 
 #endif
