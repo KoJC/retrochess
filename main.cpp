@@ -6,6 +6,8 @@
 
 //Einbindung aller weiteren Funktionen aus den anderen cpp-Dateien
 #include "header.h"
+#include "Brett.cpp"
+#include "Funktionen.cpp"
 
 using namespace std;
 
@@ -41,22 +43,25 @@ int main() {
         speichern(feld);
 			break;
 	case 4:
+		for (int i=0;i<500;i++){cout<<"i: "<<(char) i<<endl;}
 		break;
 	default:
 		cout << "Ungültige Eingabe" << endl;
 		break;
 	}
-
-	return 0;
 }
 
 
 //Übergabe der Figuren beim Neustarten eines Spiels an das feld-array
 //schwarze Figuren werden hierbei als Kleinbuchstaben, weiße als Großbuchstaben gekennzeichnet
+//leere Felder haben '0' als Wert
 void startpos(char feld[8][8]) {
 	char start[8][8] = { {'T','S','L','D','K','L','S','T'},
 						{'B','B','B','B','B','B','B','B'},
-						{},{},{},{},
+						{'0','0','0','0','0','0','0','0'},
+						{'0','0','0','0','0','0','0','0'},
+						{'0','0','0','0','0','0','0','0'},
+						{'0','0','0','0','0','0','0','0'},
 						{'b','b','b','b','b','b','b','b'},
 						{'t','s','l','d','k','l','s','t'} };
 

@@ -1,5 +1,5 @@
 //mittels dieses ASCII-Zeichens kann ein weißer Unterstrich erzeugt werden
-#define weiß 0xDF
+#define weis 0xDF
 
 #include <stdio.h>
 #include <iostream>
@@ -50,9 +50,9 @@ void schachbrett(char feld[8][8]) {
 		else if (i == 4 || i == 8 || i == 12 || i == 16 || i == 20 || i == 24 || i == 28 || i == 32) {
 			for (int j = 0; j < 8; j++) {
 				if (feld[z - 2][j] < 91 && feld[z - 2][j] > 64) {
-					if (j == 0) cout << "       ##   " << char(weiß) << char(weiß);
-					else if (j == 7) cout << char(weiß) << "   |   " << char(weiß) << char(weiß) << char(weiß) << "   ##";
-					else cout << char(weiß) << "   |   " << char(weiß) << char(weiß);
+					if (j == 0) cout << "       ##   " << char(weis) << char(weis);
+					else if (j == 7) cout << char(weis) << "   |   " << char(weis) << char(weis) << char(weis) << "   ##";
+					else cout << char(weis) << "   |   " << char(weis) << char(weis);
 				}
 
 				else {
@@ -69,11 +69,13 @@ void schachbrett(char feld[8][8]) {
 		else {
 			for (int j = 0; j < 8; j++) {
 				if (j == 0) {
-					if (feld[z - 1][j] < 91) cout << "   " << z << "   ##    " << feld[z - 1][j];
+					if (feld[z - 1][j] < 91 && feld[z - 1][j] != '0') cout << "   " << z << "   ##    " << feld[z - 1][j];
+					else if(feld[z - 1][j] == '0') cout << "   " <<z<<"   ##     ";
 					else cout << "   " << z << "   ##    " << char(feld[z - 1][j] - 32);
 				}
 				else {
-					if (feld[z - 1][j] < 91) cout << "    |    " << feld[z - 1][j];
+					if (feld[z - 1][j] < 91 && feld[z - 1][j] != '0') cout << "    |    " << feld[z - 1][j];
+					else if(feld[z - 1][j] == '0') cout << "    |     ";
 					else cout << "    |    " << char(feld[z - 1][j] - 32);
 				}
 				if (j == 7) cout << "    ##    " << z;
