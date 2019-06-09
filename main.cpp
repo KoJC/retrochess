@@ -15,7 +15,9 @@ void startpos(char feld[8][8]);
 void hilfe();
 void eingabe();
 
+//globale Variable für das Beenden des Spieles
 bool ende = 1;
+
 
 int main()
 {
