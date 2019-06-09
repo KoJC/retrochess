@@ -18,7 +18,6 @@ void eingabe();
 //globale Variable für das Beenden des Spieles
 bool ende = 1;
 
-
 int main()
 {
 	//Startbildschrim
@@ -45,8 +44,8 @@ void eingabe()
 	int menupunkt = 5;
 	char feld[8][8];
 	string zug;	//string für den "move"-Befehl
-	string help;//string für den "help"-befehl
-	string befehl;//Die Eingabe in die Befehlszeile
+	string help;   //string für den "help"-befehl
+	string befehl; //Die Eingabe in die Befehlszeile
 
 	//Definition der verschiedenen Befehlstrings
 	string menu1 = "menu";
@@ -60,18 +59,34 @@ void eingabe()
 	string aufgeben1 = "aufgeben";
 	string aufgeben2 = "AUFGEBEN";
 
-	cout << endl << endl << endl << "Befehlszeile: ";
+	cout << endl
+		 << endl
+		 << endl
+		 << "Befehlszeile: ";
 	getline(cin, befehl);
 
 	//Überprüfung, ob dieser Teilstring in der Eingabe enthalten ist und damit, welcher Befehl eingegeben wurde
-	if (((befehl.find(menu1) != string::npos && befehl[0] == 'm') || (befehl.find(menu2) != string::npos && befehl[0] == 'M')) && befehl[4] == ' ')
+	//dabei ist die syntaxgerechte Eingabe laut den Vorgaben notwendig
+	if (((befehl.find(menu1) != string::npos && befehl[0] == 'm') || (befehl.find(menu2) != string::npos && befehl[0] == 'M')) && befehl[4] == ' ' && befehl[6] == '/0')
 		menupunkt = befehl[5] - 48;
-	else if (((befehl.find(move1) != string::npos && befehl[0] == 'm') || (befehl.find(move2) != string::npos && befehl[0] == 'M')) && befehl[4] == ' ')
+
+	else if (((befehl.find(move1) != string::npos && befehl[0] == 'm') || (befehl.find(move2) != string::npos && befehl[0] == 'M')) && befehl[4] == ' ' && befehl[7] == ' ' && befehl[10] == '\0')
 		zug = befehl.replace(0, 5, "");
+
+	else if (((befehl.find(help1) != string::npos && befehl[0] == 'h') || (befehl.find(help2) != string::npos && befehl[0] == 'H')) && befehl[4] == '\0')
+		zug = "help";
+
+	else if (((befehl.find(remis1) != string::npos && befehl[0] == 'r') || (befehl.find(remis2) != string::npos && befehl[0] == 'R')) && befehl[5] == '\0')
+		zug = "remis";
+
+	else if (((befehl.find(aufgeben1) != string::npos && befehl[0] == 'a') || (befehl.find(aufgeben2) != string::npos && befehl[0] == 'A')) && befehl[8] == '\0')
+		zug = "aufgeben";
+
 	else
 	{
 		cout << "Ungültige Eingabe";
 	}
+
 	cout << zug;
 	//Menüpunkte des Spiels
 	switch (menupunkt)
