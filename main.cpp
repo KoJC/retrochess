@@ -104,6 +104,7 @@ void eingabe()
 		break;
 	case 2:
 		laden(feld);
+		schachbrett(feld);
 		cin.clear();
 		cin.ignore(numeric_limits<streamsize>::max(), '\n');
 		break;
@@ -157,7 +158,7 @@ void hilfe()
 	cout << endl
 		 << endl
 		 << endl
-		 << "############################################################################################################################" << endl
+		 << "############################################################################################################################" << endl<<endl
 		 << "Die folgenden Befehle sind im Programm zulässig.\nDabei sind sowohl Groß- als auch Kleinschreibung erlaubt." << endl
 		 << "Vor Befehlseingaben sind keine weiteren Zeichen zulässig." << endl
 		 << "Zwischen Befehl und dazugehöriger Eingabe muss ein Leerzeichen stehen." << endl
@@ -175,7 +176,6 @@ void hilfe()
 		 << endl
 		 << "Hinweis: Bei Positionsangaben wird zuerst der Buchstabe und anschließend die Zahl eingegeben\n"
 		 << "Beipiel: MOVE A1 B3" << endl
-		 << endl
 		 << endl
 		 << "############################################################################################################################" << endl;
 }

@@ -69,10 +69,14 @@ void speichern(char feld[8][8])
 //beim Auftreten eines Fehlers Ausgabe der Fehlermeldung
 void laden(char feld[8][8])
 {
-	fp = fopen("C:/Users/paulo/Desktop/positionen", "r");
+	string eingabe;
+	cout<<"Bitte Dateipfad eingeben: ";
+	cin>>eingabe;
+
+	fp = fopen(eingabe.c_str(), "r");
 	if (fp == NULL)
 	{
-		cout << "Fehler; keine Datei vorhanden" << endl;
+		cout << "ungültiger Dateipfad!" << endl << endl;
 	}
 	else
 	{
@@ -92,6 +96,6 @@ void laden(char feld[8][8])
 			zeichen = fgetc(fp);
 		}
 		fclose(fp);
-		cout << "Laden erfolgreich";
+		cout << "Laden erfolgreich" << endl;
 	}
 }
