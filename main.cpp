@@ -19,7 +19,7 @@ void eingabe();
 bool ende = 1;
 
 int main()
-{
+{	
 	//Startbildschrim
 	cout << "						RETROSCHACH" << endl
 		 << endl
@@ -67,7 +67,7 @@ void eingabe()
 
 	//Überprüfung, ob dieser Teilstring in der Eingabe enthalten ist und damit, welcher Befehl eingegeben wurde
 	//dabei ist die syntaxgerechte Eingabe laut den Vorgaben notwendig
-	if (((befehl.find(menu1) != string::npos && befehl[0] == 'm') || (befehl.find(menu2) != string::npos && befehl[0] == 'M')) && befehl[4] == ' ' && befehl[6] == '/0')
+	if (((befehl.find(menu1) != string::npos && befehl[0] == 'm') || (befehl.find(menu2) != string::npos && befehl[0] == 'M')) && befehl[4] == ' ' && befehl[6] == '\0')
 		menupunkt = befehl[5] - 48;
 
 	else if (((befehl.find(move1) != string::npos && befehl[0] == 'm') || (befehl.find(move2) != string::npos && befehl[0] == 'M')) && befehl[4] == ' ' && befehl[7] == ' ' && befehl[10] == '\0')
@@ -108,8 +108,6 @@ void eingabe()
 		break;
 	case 4:
 		hilfe();
-		break;
-	case 5:
 		break;
 	default:
 		cout << "Ungültiger Menüpunkt" << endl;

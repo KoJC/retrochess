@@ -1,5 +1,4 @@
 //mittels dieses ASCII-Zeichens kann ein weißer Unterstrich erzeugt werden
-#define weis 0xDF
 
 #include <stdio.h>
 #include <iostream>
@@ -8,6 +7,9 @@ using namespace std;
 
 
 void schachbrett(char feld[8][8]) {
+	//Varibale zur Darstellung der weißen Figuren
+	const string weis = "\u2580";
+	
 	//Darstellung des Schachbrettes samt Seitenbezeichungen
 	//ein Feld ist 3x3 groß (5x5 mit Rand), der bezeichnende Buchstabe steht in der Mitte
 	//Ausgabe der in feld[][] enthaltenen Figurenpositionen
@@ -50,9 +52,9 @@ void schachbrett(char feld[8][8]) {
 		else if (i == 4 || i == 8 || i == 12 || i == 16 || i == 20 || i == 24 || i == 28 || i == 32) {
 			for (int j = 0; j < 8; j++) {
 				if (feld[z - 2][j] < 91 && feld[z - 2][j] > 64) {
-					if (j == 0) cout << "       ##   " << char(weis) << char(weis);
-					else if (j == 7) cout << char(weis) << "   |   " << char(weis) << char(weis) << char(weis) << "   ##";
-					else cout << char(weis) << "   |   " << char(weis) << char(weis);
+					if (j == 0) cout << "       ##   " << weis << weis;
+					else if (j == 7) cout << weis << "   |   " << weis << weis << weis << "   ##";
+					else cout << weis << "   |   " << weis << weis;
 				}
 
 				else {
