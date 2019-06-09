@@ -4,6 +4,9 @@
 #include <stdio.h>
 #include <iostream>
 #include <string.h>
+//um den Buffer von cin() zu flushen nach Funktionen, die cin() benutzt haben
+//sonst wird Eintrag im Buffer in die Befehlszeile übernommen, was diese mit "ungültiger Eingabe" ausweist
+#include <limits>
 using namespace std;
 
 //Einbindung aller weiteren Funktionen aus den anderen cpp-Dateien
@@ -19,7 +22,7 @@ void eingabe();
 bool ende = 1;
 
 int main()
-{	
+{
 	//Startbildschrim
 	cout << "						RETROSCHACH" << endl
 		 << endl
@@ -87,7 +90,6 @@ void eingabe()
 		cout << "Ungültige Eingabe";
 	}
 
-	cout << zug;
 	//Menüpunkte des Spiels
 	switch (menupunkt)
 	{
@@ -102,12 +104,18 @@ void eingabe()
 		break;
 	case 2:
 		laden(feld);
+		cin.clear();
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
 		break;
 	case 3:
 		speichern(feld);
+		cin.clear();
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
 		break;
 	case 4:
 		hilfe();
+		break;
+	case 5:
 		break;
 	default:
 		cout << "Ungültiger Menüpunkt" << endl;
@@ -149,6 +157,7 @@ void hilfe()
 	cout << endl
 		 << endl
 		 << endl
+		 << "############################################################################################################################" << endl
 		 << "Die folgenden Befehle sind im Programm zulässig.\nDabei sind sowohl Groß- als auch Kleinschreibung erlaubt." << endl
 		 << "Vor Befehlseingaben sind keine weiteren Zeichen zulässig." << endl
 		 << "Zwischen Befehl und dazugehöriger Eingabe muss ein Leerzeichen stehen." << endl
@@ -167,5 +176,6 @@ void hilfe()
 		 << "Hinweis: Bei Positionsangaben wird zuerst der Buchstabe und anschließend die Zahl eingegeben\n"
 		 << "Beipiel: MOVE A1 B3" << endl
 		 << endl
-		 << endl;
+		 << endl
+		 << "############################################################################################################################" << endl;
 }
