@@ -11,8 +11,7 @@ using namespace std;
 
 //Einbindung aller weiteren Funktionen aus den anderen cpp-Dateien
 #include "header.h"
-#include "Brett.cpp"
-#include "Funktionen.cpp"
+
 
 void startpos(char feld[8][8]);
 void hilfe();
