@@ -10,7 +10,8 @@
 using namespace std;
 
 //Einbindung aller weiteren Funktionen aus den anderen cpp-Dateien
-#include "header.h"
+#include "Brett.cpp"
+#include "Funktionen.cpp"
 
 
 void startpos(char feld[8][8]);
@@ -99,6 +100,7 @@ void eingabe()
 		//Einlesen der Startpostítionen
 		startpos(feld);
 		//Darstellung des Brettes
+		cout<<endl;
 		schachbrett(feld);
 		break;
 	case 2:
