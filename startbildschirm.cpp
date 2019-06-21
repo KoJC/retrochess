@@ -12,12 +12,20 @@ using namespace std;
 
 void startbildschirm()
 {
-    cout << "						RETROSCHACH" << endl
-		 << endl
-		 << endl
-		 << "Willkommen zu dem etwas rustikalerem Schachspiel" << endl
-		 << "Zu den möglichen Befehlen und den SPielregeln siehe 'Hilfe'" << endl
-		 << "Die Befehlszeile und alle Menüpunkte stehen während des gesamten Programmablaufes zur Verfügung" << endl
-		 << "Folgende Menüpunkte sind verfügbar:\n\n(0) Beenden\n(1) Neues Spiel\n(2) Laden\n(3) Speichern\n(4) Hilfe" << endl;
-         return;
+const string rechteck = "\u2580";  
+ 
+    cout << "						RRETROSCHACH" << endl       
+         << rechteck << endl
+         << rechteck << endl
+         << rechteck << endl
+         << rechteck << endl
+         << rechteck << endl
+         << rechteck << endl
+         << endl
+         << endl
+         << "Willkommen zu dem etwas rustikalerem Schachspiel" << endl
+         << "Zu den möglichen Befehlen und den SPielregeln siehe 'Hilfe'" << endl
+         << "Die Befehlszeile und alle Menüpunkte stehen während des gesamten Programmablaufes zur Verfügung" << endl
+         << "Folgende Menüpunkte sind verfügbar:\n         \n(0) Beenden         \n(1) Neues Spiel\n(2) Laden\n(3) Speichern\n(4) Hilfe " << endl;
+        return;
 }
