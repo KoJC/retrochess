@@ -17,7 +17,7 @@ char ch;
  
   ifstream in("banner.txt", ios::in | ios::binary); 
   if(!in) { 
-    cout << "Cannot open file.\n"; 
+    cout << "Datei konnte nicht geöffnet werden.\n"; 
     return 1; 
   } 
  
