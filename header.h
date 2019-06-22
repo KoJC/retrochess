@@ -7,6 +7,6 @@
 void schachbrett(char feld[][8]);
 void speichern(char feld[][8]);
 void laden(char feld[][8]);
-void startbildschirm();
+int startbildschirm();
 
 #endif

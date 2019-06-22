@@ -1,6 +1,6 @@
 #ifndef startbildschirm_H
 #define startbildschirm_H
  
-void startbildschirm();
+int startbildschirm();
  
 #endif // startbildschirm_H
