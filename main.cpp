@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <string.h>
-//#include"startbildschirm.h"
+#include"startbildschirm.h"
 
 //um den Buffer von cin() zu flushen nach Funktionen, die cin() benutzt haben
 //sonst wird Eintrag im Buffer in die Befehlszeile übernommen, was diese mit "ungültiger Eingabe" ausweist
@@ -14,7 +14,6 @@ using namespace std;
 //Einbindung aller weiteren Funktionen aus den anderen cpp-Dateien
 #include "Brett.cpp"
 #include "Funktionen.cpp"
-#include "startbildschirm.cpp"
 
 
 void startpos(char feld[8][8]);

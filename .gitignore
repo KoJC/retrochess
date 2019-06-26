@@ -1,6 +1,3 @@
 #outputs
-a.out
-
-#vscode
-#/.vscode/tasks.bak
-
+/a.out
+/chess

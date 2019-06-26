@@ -9,7 +9,7 @@
                 "main.cpp",
                 "startbildschirm.cpp",
                 "-o",
-                "${fileDirname}/chess"
+                "${workspaceFolder}/chess"
             ],
             "options": {
                 "cwd": "${workspaceFolder}/"
