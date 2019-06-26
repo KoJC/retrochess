@@ -6,13 +6,14 @@
             "command": "/usr/bin/g++",
             "args": [
                 "-g",
-                "${file}",
+                "main.cpp",
+                "startbildschirm.cpp",
                 "-o",
-                "${fileDirname}/${fileBasenameNoExtension}"
+                "${fileDirname}/chess"
             ],
             "options": {
-                "cwd": "/usr/bin"
-            }
+                "cwd": "${workspaceFolder}/"
+        },
         }
     ],
     "version": "2.0.0"
