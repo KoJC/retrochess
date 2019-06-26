@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <iostream>
 #include <string.h>
-#include "header.h"
 
 using namespace std;
 
@@ -70,13 +69,14 @@ void speichern(char feld[8][8])
 void laden(char feld[8][8])
 {
 	string eingabe;
-	cout<<"Bitte Dateipfad eingeben: ";
-	cin>>eingabe;
+	cout << "Bitte Dateipfad eingeben: ";
+	cin >> eingabe;
 
 	fp = fopen(eingabe.c_str(), "r");
 	if (fp == NULL)
 	{
-		cout << "ungültiger Dateipfad!" << endl << endl;
+		cout << "ungültiger Dateipfad!" << endl
+			 << endl;
 	}
 	else
 	{

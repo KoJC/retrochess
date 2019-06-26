@@ -2,9 +2,7 @@
 
 #include <stdio.h>
 #include <iostream>
-#include "header.h"
 using namespace std;
-
 
 void schachbrett(char feld[8][8]) {
 	//Varibale zur Darstellung der weißen Figuren

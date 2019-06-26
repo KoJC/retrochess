@@ -8,6 +8,8 @@
                 "-g",
                 "main.cpp",
                 "startbildschirm.cpp",
+                "Brett.cpp",
+                "Funktionen.cpp",
                 "-o",
                 "${workspaceFolder}/chess"
             ],
