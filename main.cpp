@@ -67,9 +67,13 @@ void eingabe()
 
 	//Überprüfung, ob dieser Teilstring in der Eingabe enthalten ist und damit, welcher Befehl eingegeben wurde
 	//dabei ist die syntaxgerechte Eingabe laut den Vorgaben notwendig
-	if (((befehl.find(menu1) != string::npos && befehl[0] == 'm') || (befehl.find(menu2) != string::npos && befehl[0] == 'M')) && befehl[4] == ' ' && befehl[6] == '\0')
-		menupunkt = befehl[5] - 48;
 
+	//#########ACHTUNG############
+	//if (((befehl.find(menu1) != string::npos && befehl[0] == 'm') || (befehl.find(menu2) != string::npos && befehl[0] == 'M')) && befehl[4] == ' ' && befehl[6] == '\0')
+	if (befehl.find("1") != string::npos && befehl[0] == '1')
+		menupunkt = 1;
+	//#########ACHTUNG############
+	
 	else if (((befehl.find(move1) != string::npos && befehl[0] == 'm') || (befehl.find(move2) != string::npos && befehl[0] == 'M')) && befehl[4] == ' ' && befehl[7] == ' ' && befehl[10] == '\0')
 		zug = befehl.replace(0, 5, "");
 
@@ -99,6 +103,10 @@ void eingabe()
 		//Darstellung des Brettes
 		cout << endl;
 		schachbrett(feld);
+		//#########ACHTUNG############
+		void bewegen(char feld[8][8], int pos[]);
+		//void ziehen(char feld[8][8], string befehl);
+		//#########ACHTUNG############
 		break;
 	case 2:
 		laden(feld);
@@ -214,9 +222,14 @@ void umwandeln(string befehl, int pos[])
 
 void bewegen(char feld[8][8], int pos[])
 {
-	char figur = feld[pos[0]][pos[1]];
-	int moglichkeiten [64];
-	switch (figur)
+	//char figur = feld[pos[0]][pos[1]]; //Buchstaben vom Schachbrett lesen --> Figur
+	//char figur = 'K';
+	//pos[0] = 3;
+	//pos[1] = 3;
+	int moglichkeiten[64];
+	moglichkeiten[0] = 1;
+	moglichkeiten[1] = 2;
+	/*switch (figur)
 	{
 	case 'B':
 		break;
@@ -230,5 +243,11 @@ void bewegen(char feld[8][8], int pos[])
 				moglichkeiten[i] = '\0';
 		}
 		break;
+	}
+	*/
+	cout << "1" << endl;
+	for (int i = 0; i <= sizeof(moglichkeiten); i++)
+	{
+		cout << moglichkeiten[i] << endl;
 	}
 }
