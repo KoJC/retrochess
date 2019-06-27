@@ -10,6 +10,7 @@
                 "startbildschirm.cpp",
                 "Brett.cpp",
                 "Funktionen.cpp",
+                "bewegen.cpp",
                 "-o",
                 "${workspaceFolder}/chess"
             ],
