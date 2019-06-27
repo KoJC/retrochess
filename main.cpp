@@ -13,10 +13,6 @@
 #include <limits>
 using namespace std;
 
-
-
-
-
 void startpos(char feld[8][8]);
 void hilfe();
 void eingabe();
@@ -28,7 +24,7 @@ int main()
 {
 	//Startbildschrim
 	startbildschirm();
-	
+
 	while (ende)
 	{
 		eingabe();
@@ -97,7 +93,7 @@ void eingabe()
 		//Einlesen der Startpostítionen
 		startpos(feld);
 		//Darstellung des Brettes
-		cout<<endl;
+		cout << endl;
 		schachbrett(feld);
 		break;
 	case 2:
@@ -156,7 +152,8 @@ void hilfe()
 	cout << endl
 		 << endl
 		 << endl
-		 << "############################################################################################################################" << endl<<endl
+		 << "############################################################################################################################" << endl
+		 << endl
 		 << "Die folgenden Befehle sind im Programm zulässig.\nDabei sind sowohl Groß- als auch Kleinschreibung erlaubt." << endl
 		 << "Vor Befehlseingaben sind keine weiteren Zeichen zulässig." << endl
 		 << "Zwischen Befehl und dazugehöriger Eingabe muss ein Leerzeichen stehen." << endl
