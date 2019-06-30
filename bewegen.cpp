@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <string.h>
+#include "bewegen.h"
 
 using namespace std;
 void umwandeln(string befehl, int pos[]);
@@ -58,7 +59,7 @@ void bewegen(char feld[8][8], int pos[])
 	}
 	switch (figur)
 	{
-	case 'K':
+	case 'K':							  //König weiß
 		moglichkeiten[0][0] = pos[0] - 1; //ein feld nach oben
 		moglichkeiten[0][1] = pos[1];
 		moglichkeiten[1][0] = pos[0] + 1; //ein feld nach unten
@@ -75,11 +76,9 @@ void bewegen(char feld[8][8], int pos[])
 		moglichkeiten[6][1] = pos[1] - 1;
 		moglichkeiten[7][0] = pos[0] + 1; //diagonal runter rechts
 		moglichkeiten[7][1] = pos[1] + 1;
-
 		gultigesFeld(feld, moglichkeiten, false);
 		break;
-
-	case 'k':
+	case 'k':							  //König schwarz
 		moglichkeiten[0][0] = pos[0] - 1; //ein feld nach oben
 		moglichkeiten[0][1] = pos[1];
 		moglichkeiten[1][0] = pos[0] + 1; //ein feld nach unten
@@ -96,7 +95,132 @@ void bewegen(char feld[8][8], int pos[])
 		moglichkeiten[6][1] = pos[1] - 1;
 		moglichkeiten[7][0] = pos[0] + 1; //diagonal runter rechts
 		moglichkeiten[7][1] = pos[1] + 1;
-
+		gultigesFeld(feld, moglichkeiten, true);
+		break;
+	case 'S':							  //Springer weiß
+		moglichkeiten[0][0] = pos[0] + 2; // Linie +2 Reihe +1
+		moglichkeiten[0][1] = pos[1] + 1;
+		moglichkeiten[1][0] = pos[0] + 1; // Linie +1 Reihe +2
+		moglichkeiten[1][1] = pos[1] + 2;
+		moglichkeiten[2][0] = pos[0] - 1; // Linie -1 Reihe +2
+		moglichkeiten[2][1] = pos[1] + 2;
+		moglichkeiten[3][0] = pos[0] - 2; // Linie -2 Reihe +1
+		moglichkeiten[3][1] = pos[1] + 1;
+		moglichkeiten[4][0] = pos[0] - 2; // Linie -2 Reihe -1
+		moglichkeiten[4][1] = pos[1] - 1;
+		moglichkeiten[5][0] = pos[0] - 1; // Linie -1 Reihe -2
+		moglichkeiten[5][1] = pos[1] - 2;
+		moglichkeiten[6][0] = pos[0] + 1; // Linie +1 Reihe -2
+		moglichkeiten[6][1] = pos[1] - 2;
+		moglichkeiten[7][0] = pos[0] + 2; // Linie +2 Reihe -1
+		moglichkeiten[7][1] = pos[1] - 1;
+		gultigesFeld(feld, moglichkeiten, false);
+		break;
+	case 's':							  //Springer schwarz
+		moglichkeiten[0][0] = pos[0] + 2; // Linie +2 Reihe +1
+		moglichkeiten[0][1] = pos[1] + 1;
+		moglichkeiten[1][0] = pos[0] + 1; // Linie +1 Reihe +2
+		moglichkeiten[1][1] = pos[1] + 2;
+		moglichkeiten[2][0] = pos[0] - 1; // Linie -1 Reihe +2
+		moglichkeiten[2][1] = pos[1] + 2;
+		moglichkeiten[3][0] = pos[0] - 2; // Linie -2 Reihe +1
+		moglichkeiten[3][1] = pos[1] + 1;
+		moglichkeiten[4][0] = pos[0] - 2; // Linie -2 Reihe -1
+		moglichkeiten[4][1] = pos[1] - 1;
+		moglichkeiten[5][0] = pos[0] - 1; // Linie -1 Reihe -2
+		moglichkeiten[5][1] = pos[1] - 2;
+		moglichkeiten[6][0] = pos[0] + 1; // Linie +1 Reihe -2
+		moglichkeiten[6][1] = pos[1] - 2;
+		moglichkeiten[7][0] = pos[0] + 2; // Linie +2 Reihe -1
+		moglichkeiten[7][1] = pos[1] - 1;
+		gultigesFeld(feld, moglichkeiten, true);
+		break;
+	case 'L': //Läufer weiß
+		for (int i = -7; i <= 7; i++)
+		{
+			moglichkeiten[i + 7][0] = pos[0] + i; //Diagonale: links oben <--> rechts unten
+			moglichkeiten[i + 7][1] = pos[1] + i;
+			moglichkeiten[i + 7 + 15][0] = pos[0] + i; //Diagonale: links unten <--> rechts oben
+			moglichkeiten[i + 7 + 15][1] = pos[1] - i;
+		}
+		gultigesFeld(feld, moglichkeiten, false);
+		break;
+	case 'l': //Läufer schwarz
+		for (int i = -7; i <= 7; i++)
+		{
+			moglichkeiten[i + 7][0] = pos[0] + i; //Diagonale: links oben <--> rechts unten
+			moglichkeiten[i + 7][1] = pos[1] + i;
+			moglichkeiten[i + 7 + 15][0] = pos[0] + i; //Diagonale: links unten <--> rechts oben
+			moglichkeiten[i + 7 + 15][1] = pos[1] - i;
+		}
+		gultigesFeld(feld, moglichkeiten, true);
+		break;
+	case 'T': //Turm weiß
+		for (int i = -7; i <= 7; i++)
+		{
+			moglichkeiten[i + 7][0] = pos[0] + i; //Linie: + und -
+			moglichkeiten[i + 7][1] = pos[1];
+			moglichkeiten[i + 7 + 15][0] = pos[0]; //Reihe: + und -
+			moglichkeiten[i + 7 + 15][1] = pos[1] + i;
+		}
+		gultigesFeld(feld, moglichkeiten, false);
+		break;
+	case 't': //Turm schwarz
+		for (int i = -7; i <= 7; i++)
+		{
+			moglichkeiten[i + 7][0] = pos[0] + i; //Linie: + und -
+			moglichkeiten[i + 7][1] = pos[1];
+			moglichkeiten[i + 7 + 15][0] = pos[0]; //Reihe: + und -
+			moglichkeiten[i + 7 + 15][1] = pos[1] + i;
+		}
+		gultigesFeld(feld, moglichkeiten, true);
+		break;
+	case 'D': //Dame weiß
+		for (int i = -7; i <= 7; i++)
+		{
+			moglichkeiten[i + 7][0] = pos[0] + i; //Diagonale: links oben <--> rechts unten
+			moglichkeiten[i + 7][1] = pos[1] + i;
+			moglichkeiten[i + 7 + 15][0] = pos[0] + i; //Diagonale: links unten <--> rechts oben
+			moglichkeiten[i + 7 + 15][1] = pos[1] - i;
+			moglichkeiten[i + 7 + 30][0] = pos[0] + i; //Linie: + und -
+			moglichkeiten[i + 7 + 30][1] = pos[1];
+			moglichkeiten[i + 7 + 45][0] = pos[0]; //Reihe: + und -
+			moglichkeiten[i + 7 + 45][1] = pos[1] + i;
+		}
+		gultigesFeld(feld, moglichkeiten, false);
+		break;
+	case 'd': //Dame schwarz
+		for (int i = -7; i <= 7; i++)
+		{
+			moglichkeiten[i + 7][0] = pos[0] + i; //Diagonale: links oben <--> rechts unten
+			moglichkeiten[i + 7][1] = pos[1] + i;
+			moglichkeiten[i + 7 + 15][0] = pos[0] + i; //Diagonale: links unten <--> rechts oben
+			moglichkeiten[i + 7 + 15][1] = pos[1] - i;
+			moglichkeiten[i + 7 + 30][0] = pos[0] + i; //Linie: + und -
+			moglichkeiten[i + 7 + 30][1] = pos[1];
+			moglichkeiten[i + 7 + 45][0] = pos[0]; //Reihe: + und -
+			moglichkeiten[i + 7 + 45][1] = pos[1] + i;
+		}
+		gultigesFeld(feld, moglichkeiten, true);
+		break;
+	case 'B':						  //Bauer weiß
+		moglichkeiten[0][0] = pos[0]; //ein feld nach unten
+		moglichkeiten[0][1] = pos[1] + 1;
+		if (pos[1] == 1)
+		{
+			moglichkeiten[1][0] = pos[0]; //bei Startreihe zwei Felder
+			moglichkeiten[1][1] = pos[1] + 2;
+		}
+		gultigesFeld(feld, moglichkeiten, false);
+		break;
+	case 'b':						  //Bauer schwarz
+		moglichkeiten[0][0] = pos[0]; //ein feld nach oben
+		moglichkeiten[0][1] = pos[1] - 1;
+		if (pos[1] == 6)
+		{
+			moglichkeiten[1][0] = pos[0]; //bei Startreihe zwei Felder
+			moglichkeiten[1][1] = pos[1] - 2;
+		}
 		gultigesFeld(feld, moglichkeiten, true);
 		break;
 	}
