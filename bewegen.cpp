@@ -95,6 +95,26 @@ void bewegen(char feld[8][8], int pos[])
 
 		gultigesFeld(feld, moglichkeiten, true);
 		break;
+
+	case 'S':
+		moglichkeiten[0][1] = pos[0] + 2; // Linie +2 Reihe +1
+		moglichkeiten[0][0] = pos[1] + 1;
+		moglichkeiten[1][1] = pos[0] + 1; // Linie +1 Reihe +2
+		moglichkeiten[1][0] = pos[1] + 2;
+		moglichkeiten[2][1] = pos[0] - 1; // Linie -1 Reihe +2
+		moglichkeiten[2][0] = pos[1] + 2;
+		moglichkeiten[3][1] = pos[0] - 2; // Linie -2 Reihe +1
+		moglichkeiten[3][0] = pos[1] + 1;
+		moglichkeiten[4][1] = pos[0] - 2; // Linie -2 Reihe -1
+		moglichkeiten[4][0] = pos[1] - 1;
+		moglichkeiten[5][1] = pos[0] - 1; // Linie -1 Reihe -2
+		moglichkeiten[5][0] = pos[1] - 2;
+		moglichkeiten[6][1] = pos[0] + 1; // Linie +1 Reihe -2
+		moglichkeiten[6][0] = pos[1] - 2;
+		moglichkeiten[7][1] = pos[0] + 2; // Linie +2 Reihe -1
+		moglichkeiten[7][0] = pos[1] - 1;
+		gultigesFeld(feld, moglichkeiten, false);
+		break;
 	}
 }
 
@@ -114,7 +134,7 @@ void gultigesFeld(char feld[8][8], int moglichkeiten[64][2], bool schwarz)
 		}
 
 		belegt = feld[moglichkeiten[i][0]][moglichkeiten[i][1]];
-		
+
 		if (schwarz == true)
 		{
 			if (belegt == 'd' || belegt == 't' || belegt == 'b' || belegt == 's' || belegt == 'l' || belegt == 'k')
