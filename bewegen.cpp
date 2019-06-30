@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <string.h>
+#include "bewegen.h"
 
 using namespace std;
 void umwandeln(string befehl, int pos[]);
@@ -102,9 +103,9 @@ void bewegen(char feld[8][8], int pos[])
 //ungültige Möglichkeiten werden mit einer 9 belegt, da 0 eine gültige Feldkoordinate wäre
 void gultigesFeld(char feld[8][8], int moglichkeiten[64][2], bool schwarz)
 {
+	char belegt;
 	for (int i = 0; i < 64; i++)
 	{
-		char belegt = feld[moglichkeiten[i][0]][moglichkeiten[i][1]];
 
 		if (moglichkeiten[i][0] < 0 || moglichkeiten[i][0] > 7 || moglichkeiten[i][1] < 0 || moglichkeiten[i][1] > 7)
 		{
@@ -112,6 +113,8 @@ void gultigesFeld(char feld[8][8], int moglichkeiten[64][2], bool schwarz)
 			moglichkeiten[i][1] = 9;
 		}
 
+		belegt = feld[moglichkeiten[i][0]][moglichkeiten[i][1]];
+		
 		if (schwarz == true)
 		{
 			if (belegt == 'd' || belegt == 't' || belegt == 'b' || belegt == 's' || belegt == 'l' || belegt == 'k')
