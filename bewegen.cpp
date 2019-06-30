@@ -107,6 +107,7 @@ void bewegen(char feld[8][8], int pos[])
 //ungültige Möglichkeiten werden mit einer 9 belegt, da 0 eine gültige Feldkoordinate wäre
 void gultigesFeld(char feld[8][8], int moglichkeiten[64][2], bool schwarz)
 {
+	//PUSHED
 	char belegt;
 	for (int i = 0; i < 64; i++)
 	{
