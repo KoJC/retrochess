@@ -51,6 +51,11 @@ void bewegen(char feld[8][8], int pos[])
 	char figur = feld[pos[1]][pos[0]]; //Buchstaben vom Schachbrett lesen --> Figur
 	int moglichkeiten[64][2];		   //zweidimensionales Feld zum Speichern aller möglichen Züge
 									   //erste Dimension ist die jeweilige Möglichkeitsnummer, die zweite die Koordinaten davon
+	for (int i = 0; i < 64; i++)
+	{
+		moglichkeiten[i][0] = 9;
+		moglichkeiten[i][1] = 9;
+	}
 	switch (figur)
 	{
 	case 'K':
@@ -102,15 +107,17 @@ void bewegen(char feld[8][8], int pos[])
 //ungültige Möglichkeiten werden mit einer 9 belegt, da 0 eine gültige Feldkoordinate wäre
 void gultigesFeld(char feld[8][8], int moglichkeiten[64][2], bool schwarz)
 {
+	char belegt;
 	for (int i = 0; i < 64; i++)
 	{
-		char belegt = feld[moglichkeiten[i][0]][moglichkeiten[i][1]];
-
 		if (moglichkeiten[i][0] < 0 || moglichkeiten[i][0] > 7 || moglichkeiten[i][1] < 0 || moglichkeiten[i][1] > 7)
 		{
 			moglichkeiten[i][0] = 9;
 			moglichkeiten[i][1] = 9;
 		}
+
+		if (moglichkeiten[i][0] != 9 && moglichkeiten[i][1] != 9)
+			belegt = feld[moglichkeiten[i][1]][moglichkeiten[i][0]];
 
 		if (schwarz == true)
 		{
@@ -120,16 +127,16 @@ void gultigesFeld(char feld[8][8], int moglichkeiten[64][2], bool schwarz)
 				moglichkeiten[i][1] = 9;
 			}
 		}
-		else
+		else if (schwarz == false)
 		{
 			if (belegt == 'D' || belegt == 'T' || belegt == 'B' || belegt == 'S' || belegt == 'L' || belegt == 'K')
 			{
-				moglichkeiten[i][0] = 9;
-				moglichkeiten[i][1] = 9;
+				moglichkeiten[i][0] = '9';
+				moglichkeiten[i][1] = '9';
 			}
 		}
 
-		if (moglichkeiten[i][0] != 9 && moglichkeiten[i][1] != 9)
+		if (moglichkeiten[i][0] != '9' && moglichkeiten[i][1] != '9')
 			cout << moglichkeiten[i][0] << moglichkeiten[i][1] << "  ";
 	}
 }

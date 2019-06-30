@@ -103,10 +103,6 @@ void eingabe()
 		//Darstellung des Brettes
 		cout << endl;
 		schachbrett(feld);
-		//#########ACHTUNG############
-		void bewegen(char feld[8][8], int pos[]);
-		//void ziehen(char feld[8][8], string befehl);
-		//#########ACHTUNG############
 		break;
 	case 2:
 		laden(feld);
@@ -134,7 +130,6 @@ void eingabe()
 		ziehen(feld, help);
 	else if(zug != "")
 		ziehen(feld, zug);
-	cout << ende;
 }
 
 //###################################################################################################################################
