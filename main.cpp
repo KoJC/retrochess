@@ -8,6 +8,10 @@
 #include "Brett.h"
 #include "Funktionen.h"
 #include "bewegen.h"
+#include "Brett.cpp"
+#include "Funktionen.cpp"
+#include "startbildschirm.cpp"
+#include "bewegen.cpp"
 
 //um den Buffer von cin() zu flushen nach Funktionen, die cin() benutzt haben
 //sonst wird Eintrag im Buffer in die Befehlszeile übernommen, was diese mit "ungültiger Eingabe" ausweist
@@ -17,9 +21,6 @@ using namespace std;
 void startpos(char feld[8][8]);
 void hilfe();
 void eingabe();
-void umwandeln(string befehl, int pos[]);
-void ziehen(char feld[8][8], string befehl);
-void bewegen(char feld[8][8], int pos[]);
 
 //globale Variable für das Beenden des Spieles
 bool ende = 1;
@@ -43,7 +44,7 @@ void eingabe()
 	//geändert wird, soll auch nichts passiereren. Dafür sorgt dann die leere case-Anweisung für den Wert 5
 	int menupunkt = 5;
 	char feld[8][8];
-	string zug;	//string für den "move"-Befehl
+	string zug;	   //string für den "move" und "help"-Befehl
 	string help;   //string für den "help"-befehl
 	string befehl; //Die Eingabe in die Befehlszeile
 
@@ -68,17 +69,16 @@ void eingabe()
 	//Überprüfung, ob dieser Teilstring in der Eingabe enthalten ist und damit, welcher Befehl eingegeben wurde
 	//dabei ist die syntaxgerechte Eingabe laut den Vorgaben notwendig
 
-	//#########ACHTUNG############
-	//if (((befehl.find(menu1) != string::npos && befehl[0] == 'm') || (befehl.find(menu2) != string::npos && befehl[0] == 'M')) && befehl[4] == ' ' && befehl[6] == '\0')
-	if (befehl.find("1") != string::npos && befehl[0] == '1')
-		menupunkt = 1;
-	//#########ACHTUNG############
+	if (((befehl.find(menu1) != string::npos && befehl[0] == 'm') || (befehl.find(menu2) != string::npos && befehl[0] == 'M')) && befehl[4] == ' ' && befehl[6] == '\0')
+		 menupunkt = befehl[5]-48;
 	
 	else if (((befehl.find(move1) != string::npos && befehl[0] == 'm') || (befehl.find(move2) != string::npos && befehl[0] == 'M')) && befehl[4] == ' ' && befehl[7] == ' ' && befehl[10] == '\0')
-		zug = befehl.replace(0, 5, "");
+		{zug = befehl.replace(0, 5, "");
+		 zug = befehl.replace(2, 1, "");
+		}
 
-	else if (((befehl.find(help1) != string::npos && befehl[0] == 'h') || (befehl.find(help2) != string::npos && befehl[0] == 'H')) && befehl[4] == '\0')
-		zug = "help";
+	else if (((befehl.find(help1) != string::npos && befehl[0] == 'h') || (befehl.find(help2) != string::npos && befehl[0] == 'H')) && befehl[4] == ' ' && befehl[7] == '\0')
+		help = befehl.replace(0, 5, "");
 
 	else if (((befehl.find(remis1) != string::npos && befehl[0] == 'r') || (befehl.find(remis2) != string::npos && befehl[0] == 'R')) && befehl[5] == '\0')
 		zug = "remis";
@@ -128,6 +128,13 @@ void eingabe()
 		cout << "Ungültiger Menüpunkt" << endl;
 		break;
 	}
+
+	//Aufruf der bewegen_Funktion
+	if(help != "")
+		ziehen(feld, help);
+	else if(zug != "")
+		ziehen(feld, zug);
+
 }
 
 //###################################################################################################################################
@@ -185,69 +192,4 @@ void hilfe()
 		 << "Beipiel: MOVE A1 B3" << endl
 		 << endl
 		 << "############################################################################################################################" << endl;
-}
-//#####################################################################################
-void ziehen(char feld[8][8], string befehl)
-{
-	int pos[befehl.length() - 1];
-	umwandeln(befehl, pos);
-}
-
-//der übergebene string wird in ein int-array umgewandelt; char als Zwischensschritt
-//die nun im array pos[] stehenden werte sind die tatsächlichen Koordinaten im feld[8][8] array -> B3 ist nun 12
-void umwandeln(string befehl, int pos[])
-{
-	int laenge = befehl.length() - 1;
-	cout << "länge " << laenge << endl;
-	char array[laenge];
-	strcpy(array, befehl.c_str());
-	//seperate Umwandlung der Zahlen und Groß-/Kleinbuchstaben
-	for (int i = 0; i <= laenge; i++)
-	{
-		//if(array[i] >= '8' )
-		if (i == 1 || i == 3)
-			pos[i] = array[i] - 49;
-		else
-		{
-			if (array[i] >= 'A' && array[i] <= 'Z')
-				pos[i] = array[i] - 65;
-			else
-				pos[i] = array[i] - 97;
-		}
-	}
-}
-
-//für jede Figur durchgehen aller möglichen Züge
-//anschließend löschen derer, die außerhalb des Feldes liegen würden
-
-void bewegen(char feld[8][8], int pos[])
-{
-	//char figur = feld[pos[0]][pos[1]]; //Buchstaben vom Schachbrett lesen --> Figur
-	//char figur = 'K';
-	//pos[0] = 3;
-	//pos[1] = 3;
-	int moglichkeiten[64];
-	moglichkeiten[0] = 1;
-	moglichkeiten[1] = 2;
-	/*switch (figur)
-	{
-	case 'B':
-		break;
-	case 'b':
-		break;
-	case 'K':
-		moglichkeiten[0] = pos[0] - 1; //ein feld nach oben
-		for (int i = 0; i <= sizeof(moglichkeiten); i++)
-		{
-			if (moglichkeiten[i] < 0 || moglichkeiten[i] > 7)
-				moglichkeiten[i] = '\0';
-		}
-		break;
-	}
-	*/
-	cout << "1" << endl;
-	for (int i = 0; i <= sizeof(moglichkeiten); i++)
-	{
-		cout << moglichkeiten[i] << endl;
-	}
 }

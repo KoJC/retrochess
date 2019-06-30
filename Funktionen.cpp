@@ -10,17 +10,18 @@ using namespace std;
 char zeichen;
 FILE *fp;
 
-//Speichern der aktuellen Positionen in einer txt Datei auf dem Desktop
+//Speichern der aktuellen Positionen in einer txt Datei in dem ausgewählten Pfad
 //Öffnen und ggf. Erstellen der txt Datei
 //der Benutzer gibt noch den Namen der Datei an
 //existiert diese bereits, wird abgefragt, ob sie überschrieben werden soll oder eine Datei mit anderem Namen angelegt werden soll
 void speichern(char feld[8][8])
 {
 	char eingabe;
-	string name;
-	string ort = "/home/paul/Schreibtisch/";
+	string name, ort;
 
-	cout << "Die Datei wird auf dem Desktop abgespeichert\nName unter dem die Datei abgespeichert werden soll: ";
+	cout << "Dateipfad des Speicherortes: ";
+	cin >> ort;
+	cout << "Name der Datei: ";
 	cin >> name;
 	ort += name;
 
