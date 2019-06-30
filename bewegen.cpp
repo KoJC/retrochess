@@ -71,7 +71,7 @@ void bewegen(char feld[8][8], int pos[])
 		moglichkeiten[7][0] = pos[0] + 1; //diagonal runter rechts
 		moglichkeiten[7][1] = pos[1] + 1;
 
-		gultigesFeld(feld, moglichkeiten, true);
+		gultigesFeld(feld, moglichkeiten, false);
 		break;
 
 	case 'k':
@@ -92,7 +92,7 @@ void bewegen(char feld[8][8], int pos[])
 		moglichkeiten[7][0] = pos[0] + 1; //diagonal runter rechts
 		moglichkeiten[7][1] = pos[1] + 1;
 
-		gultigesFeld(feld, moglichkeiten, false);
+		gultigesFeld(feld, moglichkeiten, true);
 		break;
 	}
 }
@@ -104,15 +104,17 @@ void gultigesFeld(char feld[8][8], int moglichkeiten[64][2], bool schwarz)
 {
 	for (int i = 0; i < 64; i++)
 	{
+		char belegt = feld[moglichkeiten[i][0]][moglichkeiten[i][1]];
+
 		if (moglichkeiten[i][0] < 0 || moglichkeiten[i][0] > 7 || moglichkeiten[i][1] < 0 || moglichkeiten[i][1] > 7)
 		{
 			moglichkeiten[i][0] = 9;
 			moglichkeiten[i][1] = 9;
 		}
-		char belegt = feld[moglichkeiten[i][0]][moglichkeiten[i][1]];
-		if (schwarz == false)
+
+		if (schwarz == true)
 		{
-			if (belegt == 'D' || belegt == 'T' || belegt == 'B' || belegt == 'S' || belegt == 'L' || belegt == 'K')
+			if (belegt == 'd' || belegt == 't' || belegt == 'b' || belegt == 's' || belegt == 'l' || belegt == 'k')
 			{
 				moglichkeiten[i][0] = 9;
 				moglichkeiten[i][1] = 9;
@@ -120,7 +122,7 @@ void gultigesFeld(char feld[8][8], int moglichkeiten[64][2], bool schwarz)
 		}
 		else
 		{
-			if (belegt == 'd' || belegt == 't' || belegt == 'b' || belegt == 's' || belegt == 'l' || belegt == 'k')
+			if (belegt == 'D' || belegt == 'T' || belegt == 'B' || belegt == 'S' || belegt == 'L' || belegt == 'K')
 			{
 				moglichkeiten[i][0] = 9;
 				moglichkeiten[i][1] = 9;
