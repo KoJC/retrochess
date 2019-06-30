@@ -131,12 +131,12 @@ void gultigesFeld(char feld[8][8], int moglichkeiten[64][2], bool schwarz)
 		{
 			if (belegt == 'D' || belegt == 'T' || belegt == 'B' || belegt == 'S' || belegt == 'L' || belegt == 'K')
 			{
-				moglichkeiten[i][0] = '9';
-				moglichkeiten[i][1] = '9';
+				moglichkeiten[i][0] = 9;
+				moglichkeiten[i][1] = 9;
 			}
 		}
 
-		if (moglichkeiten[i][0] != '9' && moglichkeiten[i][1] != '9')
+		if (moglichkeiten[i][0] != 9 && moglichkeiten[i][1] != 9)
 			cout << moglichkeiten[i][0] << moglichkeiten[i][1] << "  ";
 	}
 }
