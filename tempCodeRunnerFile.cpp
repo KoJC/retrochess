@@ -1,1 +1,1 @@
-schachbrett(feld);
+spieler

@@ -8,22 +8,26 @@
 #include "Brett.h"
 #include "Funktionen.h"
 #include "bewegen.h"
-/*#include "Brett.cpp"
+#include "Brett.cpp"
 #include "Funktionen.cpp"
 #include "startbildschirm.cpp"
 #include "bewegen.cpp"
-*/
+
 //um den Buffer von cin() zu flushen nach Funktionen, die cin() benutzt haben
-//sonst wird Eintrag im Buffer in die Befehlszeile übernommen, was diese mit "ungültiger Eingabe" ausweist
+//sonst wird Eintrag im Buffer in die Befehlszeile uebernommen, was diese mit "ungueltiger Eingabe" ausweist
 #include <limits>
 using namespace std;
 
 void startpos(char feld[8][8]);
 void hilfe();
 void eingabe();
+void remis();
 
-//globale Variable für das Beenden des Spieles
+//globale Variable fuer das Beenden des Spieles
 bool ende = 1;
+bool begonnen = 0; //Varibale dafuer, dass ein Spiel gestartet wurde bzw. gerade läuft
+int spieler = 0;   //Variable, welcher Spieler gerade am zug ist; gerade = weiß, ungerade = schwarz
+bool gultig = 0;   //Variable, ob ein gueltiger Zug ausgefuehrt wurde
 
 int main()
 {
@@ -37,15 +41,15 @@ int main()
 }
 //###################################################################################################################################
 
-//Funktion für die Eingaben in der Befehlszeile
+//Funktion fuer die Eingaben in der Befehlszeile
 void eingabe()
 {
 	//Bei jedem Schleifendurchlauf wird die Variable wieder auf 5 gesetzt. Wenn der Wert nicht durch "menu"
-	//geändert wird, soll auch nichts passiereren. Dafür sorgt dann die leere case-Anweisung für den Wert 5
+	//geändert wird, soll auch nichts passiereren. Dafuer sorgt dann die leere case-Anweisung fuer den Wert 5
 	int menupunkt = 5;
 	char feld[8][8];
-	string zug;	   //string für den "move" und "help"-Befehl
-	string help;   //string für den "help"-befehl
+	string zug;	//string fuer den "move" und "help"-Befehl
+	string help;   //string fuer den "help"-befehl
 	string befehl; //Die Eingabe in die Befehlszeile
 
 	//Definition der verschiedenen Befehlstrings
@@ -60,38 +64,52 @@ void eingabe()
 	string aufgeben1 = "aufgeben";
 	string aufgeben2 = "AUFGEBEN";
 
-	cout << endl
-		 << endl
-		 << endl
-		 << "Befehlszeile: ";
+	if (begonnen == false) //Ruecksetzen, wenn kein Spiel läuft
+		spieler = 0;
+	cout << endl; //Ausgabe des Spielers und der Befehlszeile
+	if (begonnen == true && spieler % 2 == 0)
+		cout << "Weiss ist am Zug" << endl;
+	else if (begonnen == true && spieler % 2 != 0)
+		cout << "Schwarz ist am Zug" << endl;
+
+	cout << "Befehlszeile: ";
 	getline(cin, befehl);
 
-	//Überprüfung, ob dieser Teilstring in der Eingabe enthalten ist und damit, welcher Befehl eingegeben wurde
+	//ueberpruefung, ob dieser Teilstring in der Eingabe enthalten ist und damit, welcher Befehl eingegeben wurde
 	//dabei ist die syntaxgerechte Eingabe laut den Vorgaben notwendig
 
 	if (((befehl.find(menu1) != string::npos && befehl[0] == 'm') || (befehl.find(menu2) != string::npos && befehl[0] == 'M')) && befehl[4] == ' ' && befehl[6] == '\0')
-		 menupunkt = befehl[5]-48;
-	
+		menupunkt = befehl[5] - 48;
+
 	else if (((befehl.find(move1) != string::npos && befehl[0] == 'm') || (befehl.find(move2) != string::npos && befehl[0] == 'M')) && befehl[4] == ' ' && befehl[7] == ' ' && befehl[10] == '\0')
-		{zug = befehl.replace(0, 5, "");
-		 zug = befehl.replace(2, 1, "");
-		}
+	{
+		zug = befehl.replace(0, 5, "");
+		zug = befehl.replace(2, 1, "");
+	}
 
 	else if (((befehl.find(help1) != string::npos && befehl[0] == 'h') || (befehl.find(help2) != string::npos && befehl[0] == 'H')) && befehl[4] == ' ' && befehl[7] == '\0')
 		help = befehl.replace(0, 5, "");
 
-	else if (((befehl.find(remis1) != string::npos && befehl[0] == 'r') || (befehl.find(remis2) != string::npos && befehl[0] == 'R')) && befehl[5] == '\0')
-		zug = "remis";
+	else if (begonnen == true && ((befehl.find(remis1) != string::npos && befehl[0] == 'r') || (befehl.find(remis2) != string::npos && befehl[0] == 'R')) && befehl[5] == '\0')
+		remis();
 
-	else if (((befehl.find(aufgeben1) != string::npos && befehl[0] == 'a') || (befehl.find(aufgeben2) != string::npos && befehl[0] == 'A')) && befehl[8] == '\0')
-		zug = "aufgeben";
+	else if (begonnen == true && ((befehl.find(aufgeben1) != string::npos && befehl[0] == 'a') || (befehl.find(aufgeben2) != string::npos && befehl[0] == 'A')) && befehl[8] == '\0')
+	{
+		string name;
+		if (spieler % 2 == 0)
+			name = "Weiss";
+		else
+			name = "Schwarz";
+		cout << "Spieler " << name << " hat aufgegeben, das Spiel wird beendet" << endl;
+		begonnen = false;
+	}
 
 	else
 	{
-		cout << "Ungültige Eingabe";
+		cout << "Ungueltige Eingabe";
 	}
 
-	//Menüpunkte des Spiels
+	//Menuepunkte des Spiels
 	switch (menupunkt)
 	{
 	case 0:
@@ -103,10 +121,12 @@ void eingabe()
 		//Darstellung des Brettes
 		cout << endl;
 		schachbrett(feld);
+		begonnen = true;
 		break;
 	case 2:
 		laden(feld);
 		schachbrett(feld);
+		begonnen = true;
 		cin.clear();
 		cin.ignore(numeric_limits<streamsize>::max(), '\n');
 		break;
@@ -121,20 +141,35 @@ void eingabe()
 	case 5:
 		break;
 	default:
-		cout << "Ungültiger Menüpunkt" << endl;
+		cout << "Ungueltiger Menuepunkt" << endl;
 		break;
 	}
 
-	//Aufruf der bewegen_Funktion
-	if(help != "")
-		ziehen(feld, help);
-	else if(zug != "")
-		ziehen(feld, zug);
+	if (begonnen == true)
+	{
+		//Aufruf der bewegen_Funktion
+		if (help != "")
+		{
+			ziehen(feld, help, false, spieler);
+		}
+		else if (zug != "")
+		{
+			ziehen(feld, zug, gultig, spieler);
+			schachbrett(feld);
+			if (gultig == true)
+				spieler++;
+		}
+	}
 }
 
 //###################################################################################################################################
 
-//Übergabe der Figuren beim Neustarten eines Spiels an das feld-array
+//Funktion fuer die zwei Spieler
+//Jeder darf nur seine eigenen Figuren bewegen
+//Anzeige des akutellen Spielers
+//void Spieler(char feld[8][8])
+
+//uebergabe der Figuren beim Neustarten eines Spiels an das feld-array
 //schwarze Figuren werden hierbei als Kleinbuchstaben, weiße als Großbuchstaben gekennzeichnet
 //leere Felder haben '0' als Wert
 void startpos(char feld[8][8])
@@ -142,9 +177,9 @@ void startpos(char feld[8][8])
 	char start[8][8] = {{'T', 'S', 'L', 'D', 'K', 'L', 'S', 'T'},
 						{'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B'},
 						{'0', '0', '0', '0', '0', '0', '0', '0'},
-						{'0', '0', '0', '0', '0', '0', '0', '0'},
-						{'0', '0', '0', '0', '0', '0', '0', '0'},
-						{'0', '0', '0', '0', '0', '0', '0', '0'},
+						{'0', '0', '0', 'd', 'T', '0', '0', '0'},
+						{'0', '0', '0', '0', '0', 't', '0', '0'},
+						{'0', 'D', '0', '0', '0', '0', '0', '0'},
 						{'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b'},
 						{'t', 's', 'l', 'd', 'k', 'l', 's', 't'}};
 
@@ -173,7 +208,7 @@ void hilfe()
 		 << "Zwischen Befehl und dazugehöriger Eingabe muss ein Leerzeichen stehen." << endl
 		 << endl
 
-		 << "MENU X                   -> Ausführung des X-ten Menüpunktes" << endl
+		 << "MENU X                   -> Ausfuehrung des X-ten Menuepunktes" << endl
 		 << "MOVE Position1 Position2 -> Bewegen der Figur auf Position1 zu Position2\n"
 			"                            Die Leerzeichen sind dabei zwingend erforderlich"
 		 << endl
@@ -187,4 +222,27 @@ void hilfe()
 		 << "Beipiel: MOVE A1 B3" << endl
 		 << endl
 		 << "############################################################################################################################" << endl;
+}
+
+void remis()
+{
+	char eingabe;
+	cout << "Remis annehmen? (j/n) : ";
+	while (1)
+	{
+		cin >> eingabe;
+		cin.clear();
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		if (eingabe == 'j' || eingabe == 'n')
+			break;
+		else
+			cout << "Ungueltige Eingabe" << endl;
+	}
+	if (eingabe == 'n')
+		cout << "Remis wurde abgelehnt, das Spiel wird fortgesetzt" << endl;
+	if (eingabe == 'j')
+	{
+		cout << "Remis wurde angenommen, das Spiel wird beendet" << endl;
+		begonnen = false;
+	}
 }

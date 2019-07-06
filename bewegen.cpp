@@ -4,22 +4,101 @@
 #include "bewegen.h"
 
 using namespace std;
-void umwandeln(string befehl, int pos[]);
-void bewegen(char feld[8][8], int pos[]);
+bool umwandeln(string befehl, int pos[]);
+void bewegen(char feld[8][8], int pos[], int moglichkeiten[64][2]);
 void gultigesFeld(char feld[8][8], int moglichkeiten[64][2], bool schwarz);
+bool leerer_weg(char feld[8][8], int moglichkeiten[64][2], int i, int offset, bool schwarz);
+void schach(char feld[8][8], int pos[], bool schwarz);
 
-void ziehen(char feld[8][8], string befehl)
+//Funktion zum Erkennen einer Schach-Position des Königs
+void schach(char feld[8][8], int pos[], bool schwarz)
 {
+	if (schwarz == false)
+	{
+		int k[2];
+		for (int i = 0; i < 8; i++)
+		{
+			for (int j = 0; j < 8; j++)
+			{
+				if (feld[i][j] == 'K')
+				{
+					k[0] = i;
+					k[1] = j;
+				}
+			}
+		}
+		for (int i = 0; i < 8; i++)
+		{
+			for (int j = 0; j < 8; j++)
+			{
+				//if(feld[i][j])######################################
+			}
+		}
+
+	}
+}
+
+void ziehen(char feld[8][8], string befehl, bool gultig, int spieler)
+{
+	gultig = false;
+	bool schwarz = false;
+	int moglichkeiten[64][2]; //zweidimensionales Feld zum Speichern aller möglichen Züge
+							  //erste Dimension ist die jeweilige Möglichkeitsnummer, die zweite die Koordinaten davon
+	bool gemoved = 0;		  //wird auf true gesetzt, wenn das eingegebene Zielfeld der Figur eines der gefundenen Möglichkeiten ist
+							  //ansonsten ist der Zug ungültig
 	int pos[befehl.length() - 1];
-	umwandeln(befehl, pos);
-	bewegen(feld, pos);
+
+	if (umwandeln(befehl, pos) == true)
+	{
+		char aktFigur = feld[pos[1]][pos[0]]; //Entscheidung, ob die Figur auch dem aktuellen Spieler gehört
+		if (aktFigur - 97 >= 0)				  //aktuelle Figur = schwarz?
+			schwarz = true;
+
+		bewegen(feld, pos, moglichkeiten);
+
+		if (befehl.length() == 4)
+		{
+			if (spieler % 2 == 0 && aktFigur - 97 < 0 || spieler % 2 != 0 && aktFigur - 97 >= 0)
+			{
+				for (int i = 0; i < 64; i++)
+				{
+					if (pos[2] == moglichkeiten[i][0] && pos[3] == moglichkeiten[i][1])
+					{
+						feld[pos[3]][pos[2]] = feld[pos[1]][pos[0]];
+						feld[pos[1]][pos[0]] = '0';
+						schach(feld, pos, schwarz);
+						gemoved = true;
+						gultig = true;
+					}
+				}
+				if (gemoved == false)
+					cout << "Ungueltiger Zug" << endl;
+			}
+			else
+			{
+				cout << "Figuren des Gegenspielers duerfen nicht bewegt werden" << endl;
+				gultig = false;
+			}
+		}
+
+		else if (befehl.length() == 2)
+		{
+			int j = 1;
+			cout << "Erlaubte Zielfelder sind folgende: " << endl;
+			for (int i = 0; i < 64; i++)
+			{
+				if (moglichkeiten[i][0] != 9 && moglichkeiten[i][1] != 9)
+					cout << j++ << ". " << (char)(moglichkeiten[i][0] + 65) << moglichkeiten[i][1] + 1 << endl;
+			}
+		}
+	}
 }
 
 //der übergebene string wird in ein int-array umgewandelt; char als Zwischensschritt
 //die nun im array pos[] stehenden werte sind die tatsächlichen Koordinaten im feld[8][8] array -> B3 ist nun 12
-void umwandeln(string befehl, int pos[])
+bool umwandeln(string befehl, int pos[])
 {
-	bool falsch;
+	bool falsch = false;
 	int laenge = befehl.length() - 1;
 	char array[laenge];
 	strcpy(array, befehl.c_str());
@@ -42,16 +121,58 @@ void umwandeln(string befehl, int pos[])
 			break;
 		}
 	}
+
+	if (falsch == true)
+		return false;
+	if (falsch == false)
+		return true;
+}
+
+//Aussortieren der Möglichkeiten, die außerhalb des Brettes liegen
+//Aussortieren der Möglichkeiten, die von eigenen Figuren belegt sind
+//-> Es kommt zu einer Dopplung dieser Überprüfung bei Figuren, bei denen sowohl 'gultigesFeld' als auch 'leererWeg' aufgerufen wird
+//-> wird bewusst in Kauf genommen, da Springer, Bauer und König ebenfalls darauf überprüft werden müssen und keine extra Funktion für diese
+//-> geschrieben werden soll
+//ungültige Möglichkeiten werden mit einer 9 belegt, da 0 eine gültige Feldkoordinate wäre
+void gultigesFeld(char feld[8][8], int moglichkeiten[64][2], bool schwarz)
+{
+	char belegt;
+	for (int i = 0; i < 64; i++)
+	{
+		if (moglichkeiten[i][0] < 0 || moglichkeiten[i][0] > 7 || moglichkeiten[i][1] < 0 || moglichkeiten[i][1] > 7)
+		{
+			moglichkeiten[i][0] = 9;
+			moglichkeiten[i][1] = 9;
+		}
+
+		if (moglichkeiten[i][0] != 9 && moglichkeiten[i][1] != 9)
+			belegt = feld[moglichkeiten[i][1]][moglichkeiten[i][0]];
+
+		if (schwarz == true)
+		{
+			if (belegt == 'd' || belegt == 't' || belegt == 'b' || belegt == 's' || belegt == 'l' || belegt == 'k')
+			{
+				moglichkeiten[i][0] = 9;
+				moglichkeiten[i][1] = 9;
+			}
+		}
+		else if (schwarz == false)
+		{
+			if (belegt == 'D' || belegt == 'T' || belegt == 'B' || belegt == 'S' || belegt == 'L' || belegt == 'K')
+			{
+				moglichkeiten[i][0] = 9;
+				moglichkeiten[i][1] = 9;
+			}
+		}
+	}
 }
 
 //für jede Figur durchgehen aller möglichen Züge
-//anschließend löschen derer, die außerhalb des Feldes liegen würden
-
-void bewegen(char feld[8][8], int pos[])
+//zur Überprüfung, ob sich eine Figur zwischen Start und Ziel befindet
+//jede Figur muss dabei einzeln behandelt werden, da sich deren Bewegungsmuster unterscheiden
+void bewegen(char feld[8][8], int pos[], int moglichkeiten[64][2])
 {
 	char figur = feld[pos[1]][pos[0]]; //Buchstaben vom Schachbrett lesen --> Figur
-	int moglichkeiten[64][2];		   //zweidimensionales Feld zum Speichern aller möglichen Züge
-									   //erste Dimension ist die jeweilige Möglichkeitsnummer, die zweite die Koordinaten davon
 	for (int i = 0; i < 64; i++)
 	{
 		moglichkeiten[i][0] = 9;
@@ -136,70 +257,248 @@ void bewegen(char feld[8][8], int pos[])
 		gultigesFeld(feld, moglichkeiten, true);
 		break;
 	case 'L': //Läufer weiß
-		for (int i = -7; i <= 7; i++)
+		for (int i = 1; i <= 7; i++)
 		{
-			moglichkeiten[i + 7][0] = pos[0] + i; //Diagonale: links oben <--> rechts unten
-			moglichkeiten[i + 7][1] = pos[1] + i;
-			moglichkeiten[i + 7 + 15][0] = pos[0] + i; //Diagonale: links unten <--> rechts oben
-			moglichkeiten[i + 7 + 15][1] = pos[1] - i;
+			cout << "1." << i << "  ";
+			moglichkeiten[i][0] = pos[0] + i; //Linie: +
+			moglichkeiten[i][1] = pos[1] + i;
+			if (leerer_weg(feld, moglichkeiten, i, 0, false) == true)
+				break;
+		}
+		for (int i = 1; i <= 7; i++)
+		{
+			cout << "2." << i << "  ";
+			moglichkeiten[i + 7][0] = pos[0] - i; //Linie -
+			moglichkeiten[i + 7][1] = pos[1] - i;
+			if (leerer_weg(feld, moglichkeiten, i, 7, false) == true)
+				break;
+		}
+		for (int i = 1; i <= 7; i++)
+		{
+			cout << "3." << i << "  ";
+			moglichkeiten[i + 15][0] = pos[0] + i; //Reihe: +
+			moglichkeiten[i + 15][1] = pos[1] - i;
+			if (leerer_weg(feld, moglichkeiten, i, 15, false) == true)
+				break;
+		}
+		for (int i = 1; i <= 7; i++)
+		{
+			cout << "4." << i << "  ";
+			moglichkeiten[i + 23][0] = pos[0] - i; //Reihe -
+			moglichkeiten[i + 23][1] = pos[1] + i;
+			if (leerer_weg(feld, moglichkeiten, i, 23, false) == true)
+				break;
 		}
 		gultigesFeld(feld, moglichkeiten, false);
 		break;
 	case 'l': //Läufer schwarz
-		for (int i = -7; i <= 7; i++)
+		for (int i = 1; i <= 7; i++)
 		{
-			moglichkeiten[i + 7][0] = pos[0] + i; //Diagonale: links oben <--> rechts unten
-			moglichkeiten[i + 7][1] = pos[1] + i;
-			moglichkeiten[i + 7 + 15][0] = pos[0] + i; //Diagonale: links unten <--> rechts oben
-			moglichkeiten[i + 7 + 15][1] = pos[1] - i;
+			moglichkeiten[i][0] = pos[0] + i; //Linie: +
+			moglichkeiten[i][1] = pos[1] + i;
+			if (leerer_weg(feld, moglichkeiten, i, 0, true) == true)
+				break;
+		}
+		for (int i = 1; i <= 7; i++)
+		{
+			moglichkeiten[i + 7][0] = pos[0] - i; //Linie -
+			moglichkeiten[i + 7][1] = pos[1] - i;
+			if (leerer_weg(feld, moglichkeiten, i, 7, true) == true)
+				break;
+		}
+		for (int i = 1; i <= 7; i++)
+		{
+			moglichkeiten[i + 15][0] = pos[0] + i; //Reihe: +
+			moglichkeiten[i + 15][1] = pos[1] - i;
+			if (leerer_weg(feld, moglichkeiten, i, 15, true) == true)
+				break;
+		}
+		for (int i = 1; i <= 7; i++)
+		{
+			moglichkeiten[i + 23][0] = pos[0] - i; //Reihe -
+			moglichkeiten[i + 23][1] = pos[1] + i;
+			if (leerer_weg(feld, moglichkeiten, i, 23, true) == true)
+				break;
 		}
 		gultigesFeld(feld, moglichkeiten, true);
 		break;
 	case 'T': //Turm weiß
-		for (int i = -7; i <= 7; i++)
+		for (int i = 1; i <= 7; i++)
 		{
-			moglichkeiten[i + 7][0] = pos[0] + i; //Linie: + und -
+			moglichkeiten[i][0] = pos[0] + i; //Linie: +
+			moglichkeiten[i][1] = pos[1];
+			if (leerer_weg(feld, moglichkeiten, i, 0, false) == true)
+				break;
+		}
+		for (int i = 1; i <= 7; i++)
+		{
+			moglichkeiten[i + 7][0] = pos[0] - i; //Linie -
 			moglichkeiten[i + 7][1] = pos[1];
-			moglichkeiten[i + 7 + 15][0] = pos[0]; //Reihe: + und -
-			moglichkeiten[i + 7 + 15][1] = pos[1] + i;
+			if (leerer_weg(feld, moglichkeiten, i, 7, false) == true)
+				break;
+		}
+		for (int i = 1; i <= 7; i++)
+		{
+			moglichkeiten[i + 15][0] = pos[0]; //Reihe: +
+			moglichkeiten[i + 15][1] = pos[1] + i;
+			if (leerer_weg(feld, moglichkeiten, i, 15, false) == true)
+				break;
+		}
+		for (int i = 1; i <= 7; i++)
+		{
+			moglichkeiten[i + 23][0] = pos[0]; //Reihe -
+			moglichkeiten[i + 23][1] = pos[1] - i;
+			if (leerer_weg(feld, moglichkeiten, i, 23, false) == true)
+				break;
 		}
 		gultigesFeld(feld, moglichkeiten, false);
 		break;
 	case 't': //Turm schwarz
-		for (int i = -7; i <= 7; i++)
+		for (int i = 1; i <= 7; i++)
 		{
-			moglichkeiten[i + 7][0] = pos[0] + i; //Linie: + und -
+			moglichkeiten[i][0] = pos[0] + i; //Linie: +
+			moglichkeiten[i][1] = pos[1];
+			if (leerer_weg(feld, moglichkeiten, i, 0, true) == true)
+				break;
+		}
+		for (int i = 1; i <= 7; i++)
+		{
+			moglichkeiten[i + 7][0] = pos[0] - i; //Linie -
 			moglichkeiten[i + 7][1] = pos[1];
-			moglichkeiten[i + 7 + 15][0] = pos[0]; //Reihe: + und -
-			moglichkeiten[i + 7 + 15][1] = pos[1] + i;
+			if (leerer_weg(feld, moglichkeiten, i, 7, true) == true)
+				break;
+		}
+		for (int i = 1; i <= 7; i++)
+		{
+			moglichkeiten[i + 15][0] = pos[0]; //Reihe: +
+			moglichkeiten[i + 15][1] = pos[1] + i;
+			if (leerer_weg(feld, moglichkeiten, i, 15, true) == true)
+				break;
+		}
+		for (int i = 1; i <= 7; i++)
+		{
+			moglichkeiten[i + 23][0] = pos[0]; //Reihe -
+			moglichkeiten[i + 23][1] = pos[1] - i;
+			if (leerer_weg(feld, moglichkeiten, i, 23, true) == true)
+				break;
 		}
 		gultigesFeld(feld, moglichkeiten, true);
 		break;
 	case 'D': //Dame weiß
-		for (int i = -7; i <= 7; i++)
+		for (int i = 1; i <= 7; i++)
 		{
-			moglichkeiten[i + 7][0] = pos[0] + i; //Diagonale: links oben <--> rechts unten
-			moglichkeiten[i + 7][1] = pos[1] + i;
-			moglichkeiten[i + 7 + 15][0] = pos[0] + i; //Diagonale: links unten <--> rechts oben
-			moglichkeiten[i + 7 + 15][1] = pos[1] - i;
-			moglichkeiten[i + 7 + 30][0] = pos[0] + i; //Linie: + und -
-			moglichkeiten[i + 7 + 30][1] = pos[1];
-			moglichkeiten[i + 7 + 45][0] = pos[0]; //Reihe: + und -
-			moglichkeiten[i + 7 + 45][1] = pos[1] + i;
+			moglichkeiten[i][0] = pos[0] + i; //Linie: +
+			moglichkeiten[i][1] = pos[1] + i;
+			if (leerer_weg(feld, moglichkeiten, i, 0, false) == true)
+				break;
+		}
+		for (int i = 1; i <= 7; i++)
+		{
+			moglichkeiten[i + 7][0] = pos[0] - i; //Linie -
+			moglichkeiten[i + 7][1] = pos[1] - i;
+			if (leerer_weg(feld, moglichkeiten, i, 7, false) == true)
+				break;
+		}
+		for (int i = 1; i <= 7; i++)
+		{
+			moglichkeiten[i + 15][0] = pos[0] + i; //Reihe: +
+			moglichkeiten[i + 15][1] = pos[1] - i;
+			if (leerer_weg(feld, moglichkeiten, i, 15, false) == true)
+				break;
+		}
+		for (int i = 1; i <= 7; i++)
+		{
+			moglichkeiten[i + 23][0] = pos[0] - i; //Reihe -
+			moglichkeiten[i + 23][1] = pos[1] + i;
+			if (leerer_weg(feld, moglichkeiten, i, 23, false) == true)
+				break;
+		}
+		for (int i = 1; i <= 7; i++)
+		{
+			moglichkeiten[i + 31][0] = pos[0] + i; //Linie: +
+			moglichkeiten[i + 31][1] = pos[1];
+			if (leerer_weg(feld, moglichkeiten, i, 31, false) == true)
+				break;
+		}
+		for (int i = 1; i <= 7; i++)
+		{
+			moglichkeiten[i + 39][0] = pos[0] - i; //Linie -
+			moglichkeiten[i + 39][1] = pos[1];
+			if (leerer_weg(feld, moglichkeiten, i, 39, false) == true)
+				break;
+		}
+		for (int i = 1; i <= 7; i++)
+		{
+			moglichkeiten[i + 47][0] = pos[0]; //Reihe: +
+			moglichkeiten[i + 47][1] = pos[1] + i;
+			if (leerer_weg(feld, moglichkeiten, i, 47, false) == true)
+				break;
+		}
+		for (int i = 1; i <= 7; i++)
+		{
+			moglichkeiten[i + 55][0] = pos[0]; //Reihe -
+			moglichkeiten[i + 55][1] = pos[1] - i;
+			if (leerer_weg(feld, moglichkeiten, i, 55, false) == true)
+				break;
 		}
 		gultigesFeld(feld, moglichkeiten, false);
 		break;
 	case 'd': //Dame schwarz
-		for (int i = -7; i <= 7; i++)
+		for (int i = 1; i <= 7; i++)
 		{
-			moglichkeiten[i + 7][0] = pos[0] + i; //Diagonale: links oben <--> rechts unten
-			moglichkeiten[i + 7][1] = pos[1] + i;
-			moglichkeiten[i + 7 + 15][0] = pos[0] + i; //Diagonale: links unten <--> rechts oben
-			moglichkeiten[i + 7 + 15][1] = pos[1] - i;
-			moglichkeiten[i + 7 + 30][0] = pos[0] + i; //Linie: + und -
-			moglichkeiten[i + 7 + 30][1] = pos[1];
-			moglichkeiten[i + 7 + 45][0] = pos[0]; //Reihe: + und -
-			moglichkeiten[i + 7 + 45][1] = pos[1] + i;
+			moglichkeiten[i][0] = pos[0] + i; //Linie: +
+			moglichkeiten[i][1] = pos[1] + i;
+			if (leerer_weg(feld, moglichkeiten, i, 0, true) == true)
+				break;
+		}
+		for (int i = 1; i <= 7; i++)
+		{
+			moglichkeiten[i + 7][0] = pos[0] - i; //Linie -
+			moglichkeiten[i + 7][1] = pos[1] - i;
+			if (leerer_weg(feld, moglichkeiten, i, 7, true) == true)
+				break;
+		}
+		for (int i = 1; i <= 7; i++)
+		{
+			moglichkeiten[i + 15][0] = pos[0] + i; //Reihe: +
+			moglichkeiten[i + 15][1] = pos[1] - i;
+			if (leerer_weg(feld, moglichkeiten, i, 15, true) == true)
+				break;
+		}
+		for (int i = 1; i <= 7; i++)
+		{
+			moglichkeiten[i + 23][0] = pos[0] - i; //Reihe -
+			moglichkeiten[i + 23][1] = pos[1] + i;
+			if (leerer_weg(feld, moglichkeiten, i, 23, true) == true)
+				break;
+		}
+		for (int i = 1; i <= 7; i++)
+		{
+			moglichkeiten[i + 31][0] = pos[0] + i; //Linie: +
+			moglichkeiten[i + 31][1] = pos[1];
+			if (leerer_weg(feld, moglichkeiten, i, 31, true) == true)
+				break;
+		}
+		for (int i = 1; i <= 7; i++)
+		{
+			moglichkeiten[i + 39][0] = pos[0] - i; //Linie -
+			moglichkeiten[i + 39][1] = pos[1];
+			if (leerer_weg(feld, moglichkeiten, i, 39, true) == true)
+				break;
+		}
+		for (int i = 1; i <= 7; i++)
+		{
+			moglichkeiten[i + 47][0] = pos[0]; //Reihe: +
+			moglichkeiten[i + 47][1] = pos[1] + i;
+			if (leerer_weg(feld, moglichkeiten, i, 47, true) == true)
+				break;
+		}
+		for (int i = 1; i <= 7; i++)
+		{
+			moglichkeiten[i + 55][0] = pos[0]; //Reihe -
+			moglichkeiten[i + 55][1] = pos[1] - i;
+			if (leerer_weg(feld, moglichkeiten, i, 55, true) == true)
+				break;
 		}
 		gultigesFeld(feld, moglichkeiten, true);
 		break;
@@ -210,6 +509,11 @@ void bewegen(char feld[8][8], int pos[])
 		{
 			moglichkeiten[1][0] = pos[0]; //bei Startreihe zwei Felder
 			moglichkeiten[1][1] = pos[1] + 2;
+			if (feld[moglichkeiten[0][1]][moglichkeiten[0][0]] != '0')
+			{
+				moglichkeiten[1][0] = 9; //bei Startreihe zwei Felder
+				moglichkeiten[1][1] = 9;
+			}
 		}
 		gultigesFeld(feld, moglichkeiten, false);
 		break;
@@ -220,48 +524,51 @@ void bewegen(char feld[8][8], int pos[])
 		{
 			moglichkeiten[1][0] = pos[0]; //bei Startreihe zwei Felder
 			moglichkeiten[1][1] = pos[1] - 2;
+			if (feld[moglichkeiten[0][1]][moglichkeiten[0][0]] != '0')
+			{
+				moglichkeiten[1][0] = 9; //bei Startreihe zwei Felder
+				moglichkeiten[1][1] = 9;
+			}
 		}
 		gultigesFeld(feld, moglichkeiten, true);
 		break;
 	}
 }
 
-//Aussortieren der Möglichkeiten, die außerhalb des Brettes liegen
-//Aussortieren der Möglichkeiten, die von eigenen Figuren belegt sind
-//ungültige Möglichkeiten werden mit einer 9 belegt, da 0 eine gültige Feldkoordinate wäre
-void gultigesFeld(char feld[8][8], int moglichkeiten[64][2], bool schwarz)
+//Aussortieren der Möglichkeiten für Figuren, bei denen die Felder zwischen Start und Ziel frei sein müssen
+//ist das Ziel mit einer eigenen Figur belegt, so ist das zuvor überprüfte Feld das letzte Ziel
+//ist das Ziel mit einer gegnerischen Figur belegt, so ist dieses Feld das letzte Ziel -> in diesem Fall schlagen der gegnerischen Figur
+//die 'besetzt'-Variable überprüfen, welche Figur auf dem aktuellen Feld steht
+bool leerer_weg(char feld[8][8], int moglichkeiten[64][2], int i, int offset, bool schwarz)
 {
-	//PUSHED
-	char belegt;
-	for (int i = 0; i < 64; i++)
+	char besetzt;
+	besetzt = feld[moglichkeiten[i + offset][1]][moglichkeiten[i + offset][0]];
+	if (schwarz == false)
 	{
-		if (moglichkeiten[i][0] < 0 || moglichkeiten[i][0] > 7 || moglichkeiten[i][1] < 0 || moglichkeiten[i][1] > 7)
+		if (besetzt == 'b' || besetzt == 'k' || besetzt == 'd' || besetzt == 't' || besetzt == 'l' || besetzt == 's')
 		{
-			moglichkeiten[i][0] = 9;
-			moglichkeiten[i][1] = 9;
+			return true;
 		}
-
-		if (moglichkeiten[i][0] != 9 && moglichkeiten[i][1] != 9)
-			belegt = feld[moglichkeiten[i][1]][moglichkeiten[i][0]];
-
-		if (schwarz == true)
+		else if (besetzt == 'B' || besetzt == 'K' || besetzt == 'D' || besetzt == 'T' || besetzt == 'L' || besetzt == 'S')
 		{
-			if (belegt == 'd' || belegt == 't' || belegt == 'b' || belegt == 's' || belegt == 'l' || belegt == 'k')
-			{
-				moglichkeiten[i][0] = 9;
-				moglichkeiten[i][1] = 9;
-			}
+			moglichkeiten[i + offset][0] = 9;
+			moglichkeiten[i + offset][1] = 9;
+			return true;
 		}
-		else if (schwarz == false)
+		else
+			return false;
+	}
+	if (schwarz == true)
+	{
+		if (besetzt == 'B' || besetzt == 'K' || besetzt == 'D' || besetzt == 'T' || besetzt == 'L' || besetzt == 'S')
+			return true;
+		else if (besetzt == 'b' || besetzt == 'k' || besetzt == 'd' || besetzt == 't' || besetzt == 'l' || besetzt == 's')
 		{
-			if (belegt == 'D' || belegt == 'T' || belegt == 'B' || belegt == 'S' || belegt == 'L' || belegt == 'K')
-			{
-				moglichkeiten[i][0] = 9;
-				moglichkeiten[i][1] = 9;
-			}
+			moglichkeiten[i + offset][0] = 9;
+			moglichkeiten[i + offset][1] = 9;
+			return true;
 		}
-
-		if (moglichkeiten[i][0] != 9 && moglichkeiten[i][1] != 9)
-			cout << moglichkeiten[i][0] << moglichkeiten[i][1] << "  ";
+		else
+			return false;
 	}
 }

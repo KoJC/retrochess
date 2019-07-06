@@ -71,21 +71,21 @@ void schachbrett(char feld[8][8])
 				if (feld[z - 2][j] < 91 && feld[z - 2][j] > 64)
 				{
 					if (j == 0)
-						cout << "       ##   " << (char) weis <<(char) weis;
+						cout << "       ##   " << (char)weis << (char)weis << (char)weis<<"   ";
 					else if (j == 7)
-						cout <<(char) weis << "   |   " <<(char) weis <<(char) weis << (char)weis << "   ##";
+						cout << "|   " << (char)weis << (char)weis << (char)weis << "   ##";
 					else
-						cout <<(char) weis << "   |   " <<(char) weis <<(char) weis;
+						cout << "|   " << (char)weis << (char)weis << (char)weis<<"   ";
 				}
 
 				else
 				{
 					if (j == 0)
-						cout << "       ##     ";
+						cout << "       ##         ";
 					else if (j == 7)
-						cout << "    |         ##";
+						cout << "|         ##";
 					else
-						cout << "    |     ";
+						cout << "|         ";
 				}
 			}
 		}
@@ -123,6 +123,5 @@ void schachbrett(char feld[8][8])
 		cout << endl;
 	}
 	cout << endl;
-	cout << "             A         B         C         D         E         F         G         H" << endl
-		 << endl;
+	cout << "             A         B         C         D         E         F         G         H" << endl;
 }

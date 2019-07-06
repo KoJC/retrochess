@@ -29,9 +29,9 @@ int startbildschirm() //lesen von txt
   in.close();
   cout << endl
        << "Willkommen zu dem etwas rustikalerem Schachspiel" << endl
-       << "Zu den möglichen Befehlen und den SPielregeln siehe 'Hilfe'" << endl
-       << "Die Befehlszeile und alle Menüpunkte stehen während des gesamten Programmablaufes zur Verfügung" << endl
-       << "Folgende Menüpunkte sind verfügbar:\n         \n(0) Beenden         \n(1) Neues Spiel\n(2) Laden\n(3) Speichern\n(4) Hilfe " << endl;
+       << "Zu den moeglichen Befehlen und den SPielregeln siehe 'Hilfe'" << endl
+       << "Die Befehlszeile und alle Menuepunkte stehen während des gesamten Programmablaufes zur Verfuegung" << endl
+       << "Folgende Menuepunkte sind verfuegbar:\n         \n(0) Beenden         \n(1) Neues Spiel\n(2) Laden\n(3) Speichern\n(4) Hilfe " << endl;
 
   return 0;
 
