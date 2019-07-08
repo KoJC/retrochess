@@ -8,43 +8,15 @@ bool umwandeln(string befehl, int pos[]);
 void bewegen(char feld[8][8], int pos[], int moglichkeiten[64][2]);
 void gultigesFeld(char feld[8][8], int moglichkeiten[64][2], bool schwarz);
 bool leerer_weg(char feld[8][8], int moglichkeiten[64][2], int i, int offset, bool schwarz);
-void schach(char feld[8][8], int pos[], bool schwarz);
+bool schach(char feld[8][8], int pos[], int spieler);
 
-//Funktion zum Erkennen einer Schach-Position des Königs
-void schach(char feld[8][8], int pos[], bool schwarz)
+int ziehen(char feld[8][8], string befehl, int spieler)
 {
-	if (schwarz == false)
-	{
-		int k[2];
-		for (int i = 0; i < 8; i++)
-		{
-			for (int j = 0; j < 8; j++)
-			{
-				if (feld[i][j] == 'K')
-				{
-					k[0] = i;
-					k[1] = j;
-				}
-			}
-		}
-		for (int i = 0; i < 8; i++)
-		{
-			for (int j = 0; j < 8; j++)
-			{
-				//if(feld[i][j])######################################
-			}
-		}
-
-	}
-}
-
-void ziehen(char feld[8][8], string befehl, bool gultig, int spieler)
-{
-	gultig = false;
+	bool gemoved;		 //Variable, ob ein gueltiger Zug ausgefuehrt wurde
+	bool gultig = false; //Variable, ob die eigene Figur bewegt wurde
 	bool schwarz = false;
 	int moglichkeiten[64][2]; //zweidimensionales Feld zum Speichern aller möglichen Züge
 							  //erste Dimension ist die jeweilige Möglichkeitsnummer, die zweite die Koordinaten davon
-	bool gemoved = 0;		  //wird auf true gesetzt, wenn das eingegebene Zielfeld der Figur eines der gefundenen Möglichkeiten ist
 							  //ansonsten ist der Zug ungültig
 	int pos[befehl.length() - 1];
 
@@ -64,11 +36,12 @@ void ziehen(char feld[8][8], string befehl, bool gultig, int spieler)
 				{
 					if (pos[2] == moglichkeiten[i][0] && pos[3] == moglichkeiten[i][1])
 					{
-						feld[pos[3]][pos[2]] = feld[pos[1]][pos[0]];
-						feld[pos[1]][pos[0]] = '0';
-						schach(feld, pos, schwarz);
+						if (schach(feld, pos, spieler) == false)
+						{
+							gultig = true;
+							spieler++;
+						}
 						gemoved = true;
-						gultig = true;
 					}
 				}
 				if (gemoved == false)
@@ -92,13 +65,98 @@ void ziehen(char feld[8][8], string befehl, bool gultig, int spieler)
 			}
 		}
 	}
+	return spieler;
+}
+
+//Funktion zum Erkennen einer Schach-Position des Königs
+//zuerst auslesen der Position des Königs, dann durchgehen aller gegnerischen Figuren, ob sie ihn bedrohen
+//ist der Spieler, dessen König dann bedroht wird, gerade am Zug, so wird dieser rückgängig gemacht und eine Meldung ausgegeben
+//ist der Gegner am Zug, wird nur eine Meldung ausgegeben
+bool schach(char feld[8][8], int pos[], int spieler)
+{
+	int figurpos[2];
+	bool returnwert = false;
+	int moglichkeiten[64][2];
+	int w[2], s[2];					   //Positionen des Königs
+	char figur = feld[pos[3]][pos[2]]; //alte Figur, die evtl. geschlagen wird
+	feld[pos[3]][pos[2]] = feld[pos[1]][pos[0]];
+	feld[pos[1]][pos[0]] = '0';
+
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			if (feld[i][j] == 'K')
+			{
+				w[0] = i;
+				w[1] = j;
+			}
+			if (feld[i][j] == 'k')
+			{
+				s[0] = i;
+				s[1] = j;
+			}
+		}
+	}
+	
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			figurpos[0] = j;
+			figurpos[1] = i;
+			if (feld[i][j] - 97 >= 0) //Überprüfung, ob es eine schwarze Figur ist
+			{
+				bewegen(feld, figurpos, moglichkeiten);
+				gultigesFeld(feld, moglichkeiten, true);
+				for (int k = 0; k < 64; k++) //kann sich diese in einem Zug auf das Feld des Königs bewegen?
+				{
+					if (w[0] == moglichkeiten[k][1] && w[1] == moglichkeiten[k][0] && spieler % 2 == 0) //weißer Spieler am Zug
+					{
+						feld[pos[1]][pos[0]] = feld[pos[3]][pos[2]];
+						feld[pos[3]][pos[2]] = figur;
+						cout << "Zug nicht moeglich, der weisse Koenig steht sonst im Schach" << endl;
+						returnwert = true;
+						break;
+					}
+					if ((w[0] == moglichkeiten[k][1] && w[1] == moglichkeiten[k][0] && spieler % 2 != 0))
+					{
+						cout << "Der weisse Koenig steht im Schach" << endl;
+						break;
+					}
+				}
+			}
+			if (feld[i][j] - 97 < 0) //Überprüfung, ob es eine weiße Figur ist
+			{
+				bewegen(feld, figurpos, moglichkeiten);
+				gultigesFeld(feld, moglichkeiten, false);
+				for (int k = 0; k < 64; k++) //kann sich diese in einem Zug auf das Feld des Königs bewegen?
+				{
+					if (s[0] == moglichkeiten[k][1] && s[1] == moglichkeiten[k][0] && spieler % 2 != 0) //schwarzer Spieler am Zug
+					{
+						feld[pos[1]][pos[0]] = feld[pos[3]][pos[2]];
+						feld[pos[3]][pos[2]] = figur;
+						cout << "Zug nicht moeglich, der schwarze Koenig steht sonst im Schach" << endl;
+						returnwert = true;
+						break;
+					}
+					if ((s[0] == moglichkeiten[k][1] && s[1] == moglichkeiten[k][0] && spieler % 2 == 0))
+					{
+						cout << "Der schwarze Koenig steht im Schach" << endl;
+						break;
+					}
+				}
+			}
+		}
+	}
+	return returnwert;
 }
 
 //der übergebene string wird in ein int-array umgewandelt; char als Zwischensschritt
 //die nun im array pos[] stehenden werte sind die tatsächlichen Koordinaten im feld[8][8] array -> B3 ist nun 12
 bool umwandeln(string befehl, int pos[])
 {
-	bool falsch = false;
+	bool returnwert = true;
 	int laenge = befehl.length() - 1;
 	char array[laenge];
 	strcpy(array, befehl.c_str());
@@ -117,15 +175,11 @@ bool umwandeln(string befehl, int pos[])
 		if (pos[i] >= 8)
 		{
 			cout << "Koordinaten liegen außerhalb des Feldes" << endl;
-			falsch = true;
+			returnwert = false;
 			break;
 		}
 	}
-
-	if (falsch == true)
-		return false;
-	if (falsch == false)
-		return true;
+	return returnwert;
 }
 
 //Aussortieren der Möglichkeiten, die außerhalb des Brettes liegen
@@ -259,7 +313,6 @@ void bewegen(char feld[8][8], int pos[], int moglichkeiten[64][2])
 	case 'L': //Läufer weiß
 		for (int i = 1; i <= 7; i++)
 		{
-			cout << "1." << i << "  ";
 			moglichkeiten[i][0] = pos[0] + i; //Linie: +
 			moglichkeiten[i][1] = pos[1] + i;
 			if (leerer_weg(feld, moglichkeiten, i, 0, false) == true)
@@ -267,7 +320,6 @@ void bewegen(char feld[8][8], int pos[], int moglichkeiten[64][2])
 		}
 		for (int i = 1; i <= 7; i++)
 		{
-			cout << "2." << i << "  ";
 			moglichkeiten[i + 7][0] = pos[0] - i; //Linie -
 			moglichkeiten[i + 7][1] = pos[1] - i;
 			if (leerer_weg(feld, moglichkeiten, i, 7, false) == true)
@@ -275,7 +327,6 @@ void bewegen(char feld[8][8], int pos[], int moglichkeiten[64][2])
 		}
 		for (int i = 1; i <= 7; i++)
 		{
-			cout << "3." << i << "  ";
 			moglichkeiten[i + 15][0] = pos[0] + i; //Reihe: +
 			moglichkeiten[i + 15][1] = pos[1] - i;
 			if (leerer_weg(feld, moglichkeiten, i, 15, false) == true)
@@ -283,7 +334,6 @@ void bewegen(char feld[8][8], int pos[], int moglichkeiten[64][2])
 		}
 		for (int i = 1; i <= 7; i++)
 		{
-			cout << "4." << i << "  ";
 			moglichkeiten[i + 23][0] = pos[0] - i; //Reihe -
 			moglichkeiten[i + 23][1] = pos[1] + i;
 			if (leerer_weg(feld, moglichkeiten, i, 23, false) == true)
@@ -542,33 +592,31 @@ void bewegen(char feld[8][8], int pos[], int moglichkeiten[64][2])
 bool leerer_weg(char feld[8][8], int moglichkeiten[64][2], int i, int offset, bool schwarz)
 {
 	char besetzt;
+	bool returnwert = false;
 	besetzt = feld[moglichkeiten[i + offset][1]][moglichkeiten[i + offset][0]];
 	if (schwarz == false)
 	{
 		if (besetzt == 'b' || besetzt == 'k' || besetzt == 'd' || besetzt == 't' || besetzt == 'l' || besetzt == 's')
-		{
-			return true;
-		}
+			returnwert = true;
+
 		else if (besetzt == 'B' || besetzt == 'K' || besetzt == 'D' || besetzt == 'T' || besetzt == 'L' || besetzt == 'S')
 		{
 			moglichkeiten[i + offset][0] = 9;
 			moglichkeiten[i + offset][1] = 9;
-			return true;
+			returnwert = true;
 		}
-		else
-			return false;
 	}
 	if (schwarz == true)
 	{
 		if (besetzt == 'B' || besetzt == 'K' || besetzt == 'D' || besetzt == 'T' || besetzt == 'L' || besetzt == 'S')
-			return true;
+			returnwert = true;
+
 		else if (besetzt == 'b' || besetzt == 'k' || besetzt == 'd' || besetzt == 't' || besetzt == 'l' || besetzt == 's')
 		{
 			moglichkeiten[i + offset][0] = 9;
 			moglichkeiten[i + offset][1] = 9;
-			return true;
+			returnwert = true;
 		}
-		else
-			return false;
 	}
+	return returnwert;
 }

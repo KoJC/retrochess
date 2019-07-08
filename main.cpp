@@ -27,7 +27,6 @@ void remis();
 bool ende = 1;
 bool begonnen = 0; //Varibale dafuer, dass ein Spiel gestartet wurde bzw. gerade läuft
 int spieler = 0;   //Variable, welcher Spieler gerade am zug ist; gerade = weiß, ungerade = schwarz
-bool gultig = 0;   //Variable, ob ein gueltiger Zug ausgefuehrt wurde
 
 int main()
 {
@@ -66,13 +65,18 @@ void eingabe()
 
 	if (begonnen == false) //Ruecksetzen, wenn kein Spiel läuft
 		spieler = 0;
-	cout << endl; //Ausgabe des Spielers und der Befehlszeile
-	if (begonnen == true && spieler % 2 == 0)
-		cout << "Weiss ist am Zug" << endl;
-	else if (begonnen == true && spieler % 2 != 0)
-		cout << "Schwarz ist am Zug" << endl;
+	//Ausgabe des Spielers und der Befehlszeile
+	else
+	{
+		cout << endl;
+		if (spieler % 2 == 0)
+			cout << "Weiss ist am Zug" << endl;
+		else
+			cout << "Schwarz ist am Zug" << endl;
+	}
 
-	cout << "Befehlszeile: ";
+	cout << endl
+		 << "Befehlszeile: ";
 	getline(cin, befehl);
 
 	//ueberpruefung, ob dieser Teilstring in der Eingabe enthalten ist und damit, welcher Befehl eingegeben wurde
@@ -81,13 +85,13 @@ void eingabe()
 	if (((befehl.find(menu1) != string::npos && befehl[0] == 'm') || (befehl.find(menu2) != string::npos && befehl[0] == 'M')) && befehl[4] == ' ' && befehl[6] == '\0')
 		menupunkt = befehl[5] - 48;
 
-	else if (((befehl.find(move1) != string::npos && befehl[0] == 'm') || (befehl.find(move2) != string::npos && befehl[0] == 'M')) && befehl[4] == ' ' && befehl[7] == ' ' && befehl[10] == '\0')
+	else if (begonnen == true && (((befehl.find(move1) != string::npos && befehl[0] == 'm') || (befehl.find(move2) != string::npos && befehl[0] == 'M')) && befehl[4] == ' ' && befehl[7] == ' ' && befehl[10] == '\0'))
 	{
 		zug = befehl.replace(0, 5, "");
 		zug = befehl.replace(2, 1, "");
 	}
 
-	else if (((befehl.find(help1) != string::npos && befehl[0] == 'h') || (befehl.find(help2) != string::npos && befehl[0] == 'H')) && befehl[4] == ' ' && befehl[7] == '\0')
+	else if (begonnen == true && (((befehl.find(help1) != string::npos && befehl[0] == 'h') || (befehl.find(help2) != string::npos && befehl[0] == 'H')) && befehl[4] == ' ' && befehl[7] == '\0'))
 		help = befehl.replace(0, 5, "");
 
 	else if (begonnen == true && ((befehl.find(remis1) != string::npos && befehl[0] == 'r') || (befehl.find(remis2) != string::npos && befehl[0] == 'R')) && befehl[5] == '\0')
@@ -145,19 +149,18 @@ void eingabe()
 		break;
 	}
 
+	int spieleralt = spieler;
 	if (begonnen == true)
 	{
 		//Aufruf der bewegen_Funktion
 		if (help != "")
 		{
-			ziehen(feld, help, false, spieler);
+			ziehen(feld, help, spieleralt);
 		}
 		else if (zug != "")
 		{
-			ziehen(feld, zug, gultig, spieler);
+			spieler = ziehen(feld, zug, spieleralt);
 			schachbrett(feld);
-			if (gultig == true)
-				spieler++;
 		}
 	}
 }
