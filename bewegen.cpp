@@ -4,28 +4,20 @@
 #include "bewegen.h"
 
 using namespace std;
-void bewegen(char feld[8][8], int pos[], int moglichkeiten[64][2]);
 bool umwandeln(string befehl, int pos[]);
+void bewegen(char feld[8][8], int pos[], int moglichkeiten[64][2]);
 void gultigesFeld(char feld[8][8], int moglichkeiten[64][2], bool schwarz);
 bool leerer_weg(char feld[8][8], int moglichkeiten[64][2], int i, int offset, bool schwarz);
 bool schach(char feld[8][8], int pos[], int spieler);
 
-//eigentliches Ziehen der Figur
-//Zusammenführen der anderen Funktionen
 int ziehen(char feld[8][8], string befehl, int spieler)
 {
 	bool gemoved;		 //Variable, ob ein gueltiger Zug ausgefuehrt wurde
 	bool gultig = false; //Variable, ob die eigene Figur bewegt wurde
 	bool schwarz = false;
-	int moglichkeiten[64][2];	//zweidimensionales Feld zum Speichern aller möglichen Züge
-								 //erste Dimension ist die jeweilige Möglichkeitsnummer, die zweite die Koordinaten davon
-								 //bei 9 ist es keine gültige Möglichkeit ungültig
-	for (int i = 0; i < 64; i++) //zunächst werden alle Möglichkeiten mit 9 belegt
-	{
-		moglichkeiten[i][0] = 9;
-		moglichkeiten[i][1] = 9;
-	}
-
+	int moglichkeiten[64][2]; //zweidimensionales Feld zum Speichern aller möglichen Züge
+							  //erste Dimension ist die jeweilige Möglichkeitsnummer, die zweite die Koordinaten davon
+							  //ansonsten ist der Zug ungültig
 	int pos[befehl.length() - 1];
 
 	if (umwandeln(befehl, pos) == true)
@@ -96,17 +88,17 @@ bool schach(char feld[8][8], int pos[], int spieler)
 		{
 			if (feld[i][j] == 'K')
 			{
-				w[0] = j;
-				w[1] = i;
+				w[0] = i;
+				w[1] = j;
 			}
 			if (feld[i][j] == 'k')
 			{
-				s[0] = j;
-				s[1] = i;
+				s[0] = i;
+				s[1] = j;
 			}
 		}
 	}
-
+	
 	for (int i = 0; i < 8; i++)
 	{
 		for (int j = 0; j < 8; j++)
@@ -119,7 +111,7 @@ bool schach(char feld[8][8], int pos[], int spieler)
 				gultigesFeld(feld, moglichkeiten, true);
 				for (int k = 0; k < 64; k++) //kann sich diese in einem Zug auf das Feld des Königs bewegen?
 				{
-					if (w[1] == moglichkeiten[k][1] && w[0] == moglichkeiten[k][0] && spieler % 2 == 0) //weißer Spieler am Zug
+					if (w[0] == moglichkeiten[k][1] && w[1] == moglichkeiten[k][0] && spieler % 2 == 0) //weißer Spieler am Zug
 					{
 						feld[pos[1]][pos[0]] = feld[pos[3]][pos[2]];
 						feld[pos[3]][pos[2]] = figur;
@@ -127,7 +119,7 @@ bool schach(char feld[8][8], int pos[], int spieler)
 						returnwert = true;
 						break;
 					}
-					if ((w[1] == moglichkeiten[k][1] && w[0] == moglichkeiten[k][0] && spieler % 2 != 0))
+					if ((w[0] == moglichkeiten[k][1] && w[1] == moglichkeiten[k][0] && spieler % 2 != 0))
 					{
 						cout << "Der weisse Koenig steht im Schach" << endl;
 						break;
@@ -140,7 +132,7 @@ bool schach(char feld[8][8], int pos[], int spieler)
 				gultigesFeld(feld, moglichkeiten, false);
 				for (int k = 0; k < 64; k++) //kann sich diese in einem Zug auf das Feld des Königs bewegen?
 				{
-					if (s[1] == moglichkeiten[k][1] && s[0] == moglichkeiten[k][0] && spieler % 2 != 0) //schwarzer Spieler am Zug
+					if (s[0] == moglichkeiten[k][1] && s[1] == moglichkeiten[k][0] && spieler % 2 != 0) //schwarzer Spieler am Zug
 					{
 						feld[pos[1]][pos[0]] = feld[pos[3]][pos[2]];
 						feld[pos[3]][pos[2]] = figur;
@@ -148,7 +140,7 @@ bool schach(char feld[8][8], int pos[], int spieler)
 						returnwert = true;
 						break;
 					}
-					if ((s[1] == moglichkeiten[k][1] && s[0] == moglichkeiten[k][0] && spieler % 2 == 0))
+					if ((s[0] == moglichkeiten[k][1] && s[1] == moglichkeiten[k][0] && spieler % 2 == 0))
 					{
 						cout << "Der schwarze Koenig steht im Schach" << endl;
 						break;
@@ -229,48 +221,17 @@ void gultigesFeld(char feld[8][8], int moglichkeiten[64][2], bool schwarz)
 	}
 }
 
-//Aussortieren der Möglichkeiten für Figuren, bei denen die Felder zwischen Start und Ziel frei sein müssen
-//ist das Ziel mit einer eigenen Figur belegt, so ist das zuvor überprüfte Feld das letzte Ziel
-//ist das Ziel mit einer gegnerischen Figur belegt, so ist dieses Feld das letzte Ziel -> in diesem Fall schlagen der gegnerischen Figur
-//die 'besetzt'-Variable überprüfen, welche Figur auf dem aktuellen Feld steht
-bool leerer_weg(char feld[8][8], int moglichkeiten[64][2], int i, int offset, bool schwarz)
-{
-	char besetzt;
-	bool returnwert = false;
-	besetzt = feld[moglichkeiten[i + offset][1]][moglichkeiten[i + offset][0]];
-	if (schwarz == false)
-	{
-		if (besetzt == 'b' || besetzt == 'k' || besetzt == 'd' || besetzt == 't' || besetzt == 'l' || besetzt == 's')
-			returnwert = true;
-
-		else if (besetzt == 'B' || besetzt == 'K' || besetzt == 'D' || besetzt == 'T' || besetzt == 'L' || besetzt == 'S')
-		{
-			moglichkeiten[i + offset][0] = 9;
-			moglichkeiten[i + offset][1] = 9;
-			returnwert = true;
-		}
-	}
-	if (schwarz == true)
-	{
-		if (besetzt == 'B' || besetzt == 'K' || besetzt == 'D' || besetzt == 'T' || besetzt == 'L' || besetzt == 'S')
-			returnwert = true;
-
-		else if (besetzt == 'b' || besetzt == 'k' || besetzt == 'd' || besetzt == 't' || besetzt == 'l' || besetzt == 's')
-		{
-			moglichkeiten[i + offset][0] = 9;
-			moglichkeiten[i + offset][1] = 9;
-			returnwert = true;
-		}
-	}
-	return returnwert;
-}
-
 //für jede Figur durchgehen aller möglichen Züge
 //zur Überprüfung, ob sich eine Figur zwischen Start und Ziel befindet
 //jede Figur muss dabei einzeln behandelt werden, da sich deren Bewegungsmuster unterscheiden
 void bewegen(char feld[8][8], int pos[], int moglichkeiten[64][2])
 {
 	char figur = feld[pos[1]][pos[0]]; //Buchstaben vom Schachbrett lesen --> Figur
+	for (int i = 0; i < 64; i++)
+	{
+		moglichkeiten[i][0] = 9;
+		moglichkeiten[i][1] = 9;
+	}
 	switch (figur)
 	{
 	case 'K':							  //König weiß
@@ -594,18 +555,6 @@ void bewegen(char feld[8][8], int pos[], int moglichkeiten[64][2])
 	case 'B':						  //Bauer weiß
 		moglichkeiten[0][0] = pos[0]; //ein feld nach unten
 		moglichkeiten[0][1] = pos[1] + 1;
-
-		if (feld[pos[0] + 1][pos[1] + 1] != '0')
-		{
-			moglichkeiten[2][0] = pos[0] + 1;
-			moglichkeiten[2][1] = pos[1] + 1;
-		}
-		if (feld[pos[0] - 1][pos[1] + 1] != '0')
-		{
-			moglichkeiten[3][0] = pos[0] - 1;
-			moglichkeiten[3][1] = pos[1] + 1;
-		}
-
 		if (pos[1] == 1)
 		{
 			moglichkeiten[1][0] = pos[0]; //bei Startreihe zwei Felder
@@ -621,18 +570,6 @@ void bewegen(char feld[8][8], int pos[], int moglichkeiten[64][2])
 	case 'b':						  //Bauer schwarz
 		moglichkeiten[0][0] = pos[0]; //ein feld nach oben
 		moglichkeiten[0][1] = pos[1] - 1;
-
-		if (feld[pos[0] + 1][pos[1] - 1] != '0')
-		{
-			moglichkeiten[2][0] = pos[0] + 1;
-			moglichkeiten[2][1] = pos[1] - 1;
-		}
-		if (feld[pos[0] - 1][pos[1] - 1] != '0')
-		{
-			moglichkeiten[3][0] = pos[0] - 1;
-			moglichkeiten[3][1] = pos[1] - 1;
-		}
-
 		if (pos[1] == 6)
 		{
 			moglichkeiten[1][0] = pos[0]; //bei Startreihe zwei Felder
@@ -646,4 +583,40 @@ void bewegen(char feld[8][8], int pos[], int moglichkeiten[64][2])
 		gultigesFeld(feld, moglichkeiten, true);
 		break;
 	}
+}
+
+//Aussortieren der Möglichkeiten für Figuren, bei denen die Felder zwischen Start und Ziel frei sein müssen
+//ist das Ziel mit einer eigenen Figur belegt, so ist das zuvor überprüfte Feld das letzte Ziel
+//ist das Ziel mit einer gegnerischen Figur belegt, so ist dieses Feld das letzte Ziel -> in diesem Fall schlagen der gegnerischen Figur
+//die 'besetzt'-Variable überprüfen, welche Figur auf dem aktuellen Feld steht
+bool leerer_weg(char feld[8][8], int moglichkeiten[64][2], int i, int offset, bool schwarz)
+{
+	char besetzt;
+	bool returnwert = false;
+	besetzt = feld[moglichkeiten[i + offset][1]][moglichkeiten[i + offset][0]];
+	if (schwarz == false)
+	{
+		if (besetzt == 'b' || besetzt == 'k' || besetzt == 'd' || besetzt == 't' || besetzt == 'l' || besetzt == 's')
+			returnwert = true;
+
+		else if (besetzt == 'B' || besetzt == 'K' || besetzt == 'D' || besetzt == 'T' || besetzt == 'L' || besetzt == 'S')
+		{
+			moglichkeiten[i + offset][0] = 9;
+			moglichkeiten[i + offset][1] = 9;
+			returnwert = true;
+		}
+	}
+	if (schwarz == true)
+	{
+		if (besetzt == 'B' || besetzt == 'K' || besetzt == 'D' || besetzt == 'T' || besetzt == 'L' || besetzt == 'S')
+			returnwert = true;
+
+		else if (besetzt == 'b' || besetzt == 'k' || besetzt == 'd' || besetzt == 't' || besetzt == 'l' || besetzt == 's')
+		{
+			moglichkeiten[i + offset][0] = 9;
+			moglichkeiten[i + offset][1] = 9;
+			returnwert = true;
+		}
+	}
+	return returnwert;
 }

@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <iostream>
 #include <string.h>
-
 #include "startbildschirm.h"
 #include "Brett.h"
 #include "Funktionen.h"
@@ -64,9 +63,7 @@ void eingabe()
 	string aufgeben1 = "aufgeben";
 	string aufgeben2 = "AUFGEBEN";
 
-	//läuft gerade eine Parti -> move, help, Spieler schwarz/weiß freigeschalten
-	//Ruecksetzen, wenn kein Spiel läuft
-	if (begonnen == false) 
+	if (begonnen == false) //Ruecksetzen, wenn kein Spiel läuft
 		spieler = 0;
 	//Ausgabe des Spielers und der Befehlszeile
 	else
@@ -170,6 +167,11 @@ void eingabe()
 
 //###################################################################################################################################
 
+//Funktion fuer die zwei Spieler
+//Jeder darf nur seine eigenen Figuren bewegen
+//Anzeige des akutellen Spielers
+//void Spieler(char feld[8][8])
+
 //uebergabe der Figuren beim Neustarten eines Spiels an das feld-array
 //schwarze Figuren werden hierbei als Kleinbuchstaben, weiße als Großbuchstaben gekennzeichnet
 //leere Felder haben '0' als Wert
@@ -178,9 +180,9 @@ void startpos(char feld[8][8])
 	char start[8][8] = {{'T', 'S', 'L', 'D', 'K', 'L', 'S', 'T'},
 						{'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B'},
 						{'0', '0', '0', '0', '0', '0', '0', '0'},
-						{'0', '0', '0', '0', '0', '0', '0', '0'},
-						{'0', '0', '0', '0', '0', '0', '0', '0'},
-						{'0', '0', '0', '0', '0', '0', '0', '0'},
+						{'0', '0', '0', 'd', 'T', '0', '0', '0'},
+						{'0', '0', '0', '0', '0', 't', '0', '0'},
+						{'0', 'D', '0', '0', '0', '0', '0', '0'},
 						{'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b'},
 						{'t', 's', 'l', 'd', 'k', 'l', 's', 't'}};
 
@@ -214,7 +216,8 @@ void hilfe()
 			"                            Die Leerzeichen sind dabei zwingend erforderlich"
 		 << endl
 		 << "HELP Position1           -> Zeigt die möglichen Zielpositionen der auf Position1 befindlichen Figur" << endl
-		 << "REMIS                    -> Ein Spieler kann damit ein Remis anbieten. Dies muss vom zweiten Spieler bestätigt werden\n"
+		 << "REMIS                    -> Ein Spieler kann damit ein Remis anbieten. Der gleiche Befehl muss vom zweiten Spieler eingegeben werden,\n"
+			"                            Um dies zu bestätigen"
 		 << endl
 		 << "AUFGEBEN                 -> Der Spieler gibt auf und verliert dadurch das Spiel" << endl
 		 << endl
