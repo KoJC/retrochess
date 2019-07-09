@@ -2,7 +2,7 @@
 //das auskommentierte const string weis = "\u2580"; ist für LINUX
 //für die Darstellung in Linux musst du bei der Darstellung der weißen Figuren das (char) vor weis entfernen und das define hier oben auskommentieren
 //mittels dieses ASCII-Zeichens kann ein weißer Unterstrich erzeugt werden
-#define weis 0xDB
+//#define weis 0xDB
 
 #include <stdio.h>
 #include <iostream>
@@ -11,7 +11,7 @@ using namespace std;
 void schachbrett(char feld[8][8])
 {
 	//Varibale zur Darstellung der weißen Figuren
-	//const string weis = "\u2580";
+	const string weis = "\u2580";
 
 	//Darstellung des Schachbrettes samt Seitenbezeichungen
 	//ein Feld ist 3x3 groß (5x5 mit Rand), der bezeichnende Buchstabe steht in der Mitte
@@ -71,11 +71,11 @@ void schachbrett(char feld[8][8])
 				if (feld[z - 2][j] < 91 && feld[z - 2][j] > 64)
 				{
 					if (j == 0)
-						cout << "       ##   " << (char)weis << (char)weis << (char)weis<<"   ";
+						cout << "       ##   " << weis << weis << weis<<"   ";
 					else if (j == 7)
-						cout << "|   " << (char)weis << (char)weis << (char)weis << "   ##";
+						cout << "|   " << weis << weis << weis << "   ##";
 					else
-						cout << "|   " << (char)weis << (char)weis << (char)weis<<"   ";
+						cout << "|   " << weis << weis << weis<<"   ";
 				}
 
 				else
