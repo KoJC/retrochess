@@ -8,10 +8,7 @@
 #include "Brett.h"
 #include "Funktionen.h"
 #include "bewegen.h"
-//#include "Brett.cpp"
-//#include "Funktionen.cpp"
-//#include "startbildschirm.cpp"
-//#include "bewegen.cpp"
+
 
 //um den Buffer von cin() zu flushen nach Funktionen, die cin() benutzt haben
 //sonst wird Eintrag im Buffer in die Befehlszeile uebernommen, was diese mit "ungueltiger Eingabe" ausweist
@@ -180,9 +177,9 @@ void startpos(char feld[8][8])
 	char start[8][8] = {{'T', 'S', 'L', 'D', 'K', 'L', 'S', 'T'},
 						{'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B'},
 						{'0', '0', '0', '0', '0', '0', '0', '0'},
-						{'0', '0', '0', 'd', 'T', '0', '0', '0'},
-						{'0', '0', '0', '0', '0', 't', '0', '0'},
-						{'0', 'D', '0', '0', '0', '0', '0', '0'},
+						{'0', '0', '0', '0', '0', '0', '0', '0'},
+						{'0', '0', '0', '0', '0', '0', '0', '0'},
+						{'0', '0', '0', '0', '0', '0', '0', '0'},
 						{'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b'},
 						{'t', 's', 'l', 'd', 'k', 'l', 's', 't'}};
 
