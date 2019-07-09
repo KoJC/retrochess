@@ -98,7 +98,7 @@ bool schach(char feld[8][8], int pos[], int spieler)
 			}
 		}
 	}
-	
+
 	for (int i = 0; i < 8; i++)
 	{
 		for (int j = 0; j < 8; j++)
@@ -555,6 +555,18 @@ void bewegen(char feld[8][8], int pos[], int moglichkeiten[64][2])
 	case 'B':						  //Bauer weiß
 		moglichkeiten[0][0] = pos[0]; //ein feld nach unten
 		moglichkeiten[0][1] = pos[1] + 1;
+
+		if (feld[pos[0] + 1][pos[1] + 1] != '0')
+		{
+			moglichkeiten[2][0] = pos[0] + 1;
+			moglichkeiten[2][1] = pos[1] + 1;
+		}
+		if (feld[pos[0] - 1][pos[1] + 1] != '0')
+		{
+			moglichkeiten[3][0] = pos[0] - 1;
+			moglichkeiten[3][1] = pos[1] + 1;
+		}
+
 		if (pos[1] == 1)
 		{
 			moglichkeiten[1][0] = pos[0]; //bei Startreihe zwei Felder
@@ -565,21 +577,34 @@ void bewegen(char feld[8][8], int pos[], int moglichkeiten[64][2])
 				moglichkeiten[1][1] = 9;
 			}
 		}
+
 		gultigesFeld(feld, moglichkeiten, false);
 		break;
 	case 'b':						  //Bauer schwarz
 		moglichkeiten[0][0] = pos[0]; //ein feld nach oben
 		moglichkeiten[0][1] = pos[1] - 1;
-		if (pos[1] == 6)
+
+		if (feld[pos[0] + 1][pos[1] - 1] != '0')
 		{
-			moglichkeiten[1][0] = pos[0]; //bei Startreihe zwei Felder
-			moglichkeiten[1][1] = pos[1] - 2;
-			if (feld[moglichkeiten[0][1]][moglichkeiten[0][0]] != '0')
-			{
-				moglichkeiten[1][0] = 9; //bei Startreihe zwei Felder
-				moglichkeiten[1][1] = 9;
-			}
+			moglichkeiten[2][0] = pos[0] + 1;
+			moglichkeiten[2][1] = pos[1] - 1;
 		}
+		if (feld[pos[0] - 1][pos[1] - 1] != '0')
+		{
+			moglichkeiten[3][0] = pos[0] - 1;
+			moglichkeiten[3][1] = pos[1] - 1;
+		}
+
+			if (pos[1] == 6)
+			{
+				moglichkeiten[1][0] = pos[0]; //bei Startreihe zwei Felder
+				moglichkeiten[1][1] = pos[1] - 2;
+				if (feld[moglichkeiten[0][1]][moglichkeiten[0][0]] != '0')
+				{
+					moglichkeiten[1][0] = 9; //bei Startreihe zwei Felder
+					moglichkeiten[1][1] = 9;
+				}
+			}
 		gultigesFeld(feld, moglichkeiten, true);
 		break;
 	}
