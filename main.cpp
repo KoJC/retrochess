@@ -9,10 +9,12 @@
 #include "Brett.h"
 #include "Funktionen.h"
 #include "bewegen.h"
-//#include "Brett.cpp"
-//#include "Funktionen.cpp"
-//#include "startbildschirm.cpp"
-//#include "bewegen.cpp"
+#include "Brett.cpp"
+#include "Funktionen.cpp"
+#include "startbildschirm.cpp"
+#include "bewegen.cpp"
+
+//xrztfuzgiuhiljölköl
 
 //um den Buffer von cin() zu flushen nach Funktionen, die cin() benutzt haben
 //sonst wird Eintrag im Buffer in die Befehlszeile uebernommen, was diese mit "ungueltiger Eingabe" ausweist
