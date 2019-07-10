@@ -12,8 +12,8 @@ bool schach(char feld[8][8], int pos[], int spieler);
 
 int ziehen(char feld[8][8], string befehl, int spieler)
 {
-	bool gemoved;		 //Variable, ob ein gueltiger Zug ausgefuehrt wurde
-	bool gultig = false; //Variable, ob die eigene Figur bewegt wurde
+	bool gemoved = false; //Variable, ob ein gueltiger Zug ausgefuehrt wurde
+	bool gultig = false;  //Variable, ob die eigene Figur bewegt wurde
 	bool schwarz = false;
 	int moglichkeiten[64][2]; //zweidimensionales Feld zum Speichern aller möglichen Züge
 							  //erste Dimension ist die jeweilige Möglichkeitsnummer, die zweite die Koordinaten davon
@@ -40,8 +40,8 @@ int ziehen(char feld[8][8], string befehl, int spieler)
 						{
 							gultig = true;
 							spieler++;
+							gemoved = true;
 						}
-						gemoved = true;
 					}
 				}
 				if (gemoved == false)
@@ -553,25 +553,36 @@ void bewegen(char feld[8][8], int pos[], int moglichkeiten[64][2])
 		gultigesFeld(feld, moglichkeiten, true);
 		break;
 	case 'B':						  //Bauer weiß
-		moglichkeiten[0][0] = pos[0]; //ein feld nach unten
+		moglichkeiten[0][0] = pos[0]; //ein feld nach oben
 		moglichkeiten[0][1] = pos[1] + 1;
 
-		if (feld[pos[0] + 1][pos[1] + 1] != '0')
+		if (feld[moglichkeiten[0][1]][moglichkeiten[0][0]] != '0')
 		{
-			moglichkeiten[2][0] = pos[0] + 1;
-			moglichkeiten[2][1] = pos[1] + 1;
+			moglichkeiten[0][0] = 9; //ein feld nach oben
+			moglichkeiten[0][1] = 9;
 		}
-		if (feld[pos[0] - 1][pos[1] + 1] != '0')
+
+		moglichkeiten[2][0] = pos[0] + 1;
+		moglichkeiten[2][1] = pos[1] + 1;
+		moglichkeiten[3][0] = pos[0] - 1;
+		moglichkeiten[3][1] = pos[1] + 1;
+
+		if (feld[moglichkeiten[2][1]][moglichkeiten[2][0]] != '0' && feld[moglichkeiten[2][1]][moglichkeiten[2][0]] - 97 < 0)
 		{
-			moglichkeiten[3][0] = pos[0] - 1;
-			moglichkeiten[3][1] = pos[1] + 1;
+			moglichkeiten[2][0] = 9; //ein feld nach oben
+			moglichkeiten[2][1] = 9;
+		}
+		if (feld[moglichkeiten[3][1]][moglichkeiten[3][0]] != '0' && feld[moglichkeiten[2][1]][moglichkeiten[3][0]] - 97 < 0)
+		{
+			moglichkeiten[3][0] = 9; //ein feld nach oben
+			moglichkeiten[3][1] = 9;
 		}
 
 		if (pos[1] == 1)
 		{
 			moglichkeiten[1][0] = pos[0]; //bei Startreihe zwei Felder
 			moglichkeiten[1][1] = pos[1] + 2;
-			if (feld[moglichkeiten[0][1]][moglichkeiten[0][0]] != '0')
+			if (feld[moglichkeiten[1][1]][moglichkeiten[1][0]] != '0')
 			{
 				moglichkeiten[1][0] = 9; //bei Startreihe zwei Felder
 				moglichkeiten[1][1] = 9;
@@ -584,27 +595,38 @@ void bewegen(char feld[8][8], int pos[], int moglichkeiten[64][2])
 		moglichkeiten[0][0] = pos[0]; //ein feld nach oben
 		moglichkeiten[0][1] = pos[1] - 1;
 
-		if (feld[pos[0] + 1][pos[1] - 1] != '0')
+		if (feld[moglichkeiten[0][1]][moglichkeiten[0][0]] != '0')
 		{
-			moglichkeiten[2][0] = pos[0] + 1;
-			moglichkeiten[2][1] = pos[1] - 1;
-		}
-		if (feld[pos[0] - 1][pos[1] - 1] != '0')
-		{
-			moglichkeiten[3][0] = pos[0] - 1;
-			moglichkeiten[3][1] = pos[1] - 1;
+			moglichkeiten[0][0] = 9; //ein feld nach oben
+			moglichkeiten[0][1] = 9;
 		}
 
-			if (pos[1] == 6)
+		moglichkeiten[2][0] = pos[0] + 1;
+		moglichkeiten[2][1] = pos[1] - 1;
+		moglichkeiten[3][0] = pos[0] - 1;
+		moglichkeiten[3][1] = pos[1] - 1;
+
+		if (feld[moglichkeiten[2][1]][moglichkeiten[2][0]] != '0' && feld[moglichkeiten[2][1]][moglichkeiten[2][0]] - 97 >= 0)
+		{
+			moglichkeiten[2][0] = 9; //ein feld nach oben
+			moglichkeiten[2][1] = 9;
+		}
+		if (feld[moglichkeiten[3][1]][moglichkeiten[3][0]] != '0' && feld[moglichkeiten[2][1]][moglichkeiten[3][0]] - 97 >= 0)
+		{
+			moglichkeiten[3][0] = 9; //ein feld nach oben
+			moglichkeiten[3][1] = 9;
+		}
+
+		if (pos[1] == 6)
+		{
+			moglichkeiten[1][0] = pos[0]; //bei Startreihe zwei Felder
+			moglichkeiten[1][1] = pos[1] - 2;
+			if (feld[moglichkeiten[0][1]][moglichkeiten[0][0]] != '0')
 			{
-				moglichkeiten[1][0] = pos[0]; //bei Startreihe zwei Felder
-				moglichkeiten[1][1] = pos[1] - 2;
-				if (feld[moglichkeiten[0][1]][moglichkeiten[0][0]] != '0')
-				{
-					moglichkeiten[1][0] = 9; //bei Startreihe zwei Felder
-					moglichkeiten[1][1] = 9;
-				}
+				moglichkeiten[1][0] = 9; //bei Startreihe zwei Felder
+				moglichkeiten[1][1] = 9;
 			}
+		}
 		gultigesFeld(feld, moglichkeiten, true);
 		break;
 	}
