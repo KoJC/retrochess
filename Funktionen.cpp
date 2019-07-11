@@ -38,7 +38,7 @@ void speichern(char feld[8][8])
 			}
 		}
 		fclose(fp);
-		cout << "Speichern erfolgreich";
+		cout << "Speichern erfolgreich"<<endl;
 	}
 	else
 	{
@@ -47,7 +47,7 @@ void speichern(char feld[8][8])
 		cin >> eingabe;
 
 		if (eingabe == 'n')
-			cout << "Speichern abgebrochen";
+			cout << "Speichern abgebrochen"<<endl;
 		else if (eingabe == 'j')
 		{
 			fp = fopen(ort.c_str(), "w");
@@ -60,7 +60,7 @@ void speichern(char feld[8][8])
 				}
 			}
 			fclose(fp);
-			cout << "Speichern erfolgreich";
+			cout << "Speichern erfolgreich"<<endl;
 		}
 	}
 }

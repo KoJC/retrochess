@@ -75,6 +75,7 @@ void eingabe()
 	cout << endl
 		 << "Befehlszeile: ";
 	getline(cin, befehl);
+	cout<<endl;
 
 	//ueberpruefung, ob dieser Teilstring in der Eingabe enthalten ist und damit, welcher Befehl eingegeben wurde
 	//dabei ist die syntaxgerechte Eingabe laut den Vorgaben notwendig
