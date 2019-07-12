@@ -1,13 +1,16 @@
 //damit der Compiler bei fopen() keinen Fehler anzeigt ("function unsafe")
 #define _CRT_SECURE_NO_DEPRECATE
 
-#include <stdio.h>
 #include <iostream>
 #include <string.h>
 #include "startbildschirm.h"
 #include "Brett.h"
 #include "Funktionen.h"
 #include "bewegen.h"
+#include "Brett.cpp"
+#include "startbildschirm.cpp"
+#include "Funktionen.cpp"
+#include "bewegen.cpp"
 
 
 //um den Buffer von cin() zu flushen nach Funktionen, die cin() benutzt haben

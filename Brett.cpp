@@ -4,7 +4,6 @@
 //mittels dieses ASCII-Zeichens kann ein weißer Unterstrich erzeugt werden
 //#define weis 0xDB
 
-#include <stdio.h>
 #include <iostream>
 using namespace std;
 

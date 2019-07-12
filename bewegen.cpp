@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <iostream>
 #include <string.h>
 #include "bewegen.h"
@@ -562,6 +561,7 @@ void bewegen(char feld[8][8], int pos[], int moglichkeiten[64][2])
 			moglichkeiten[0][1] = 9;
 		}
 
+		//Überprüfung auf schräg schlagen -> gegnerische Figur besetzt dieses Feld
 		moglichkeiten[2][0] = pos[0] + 1;
 		moglichkeiten[2][1] = pos[1] + 1;
 		moglichkeiten[3][0] = pos[0] - 1;
@@ -569,12 +569,12 @@ void bewegen(char feld[8][8], int pos[], int moglichkeiten[64][2])
 
 		if (feld[moglichkeiten[2][1]][moglichkeiten[2][0]] != '0' && feld[moglichkeiten[2][1]][moglichkeiten[2][0]] - 97 < 0)
 		{
-			moglichkeiten[2][0] = 9; //ein feld nach oben
+			moglichkeiten[2][0] = 9;
 			moglichkeiten[2][1] = 9;
 		}
 		if (feld[moglichkeiten[3][1]][moglichkeiten[3][0]] != '0' && feld[moglichkeiten[2][1]][moglichkeiten[3][0]] - 97 < 0)
 		{
-			moglichkeiten[3][0] = 9; //ein feld nach oben
+			moglichkeiten[3][0] = 9;
 			moglichkeiten[3][1] = 9;
 		}
 
@@ -600,7 +600,8 @@ void bewegen(char feld[8][8], int pos[], int moglichkeiten[64][2])
 			moglichkeiten[0][0] = 9; //ein feld nach oben
 			moglichkeiten[0][1] = 9;
 		}
-
+		
+		//Überprüfung auf schräg schlagen -> gegnerische Figur besetzt dieses Feld
 		moglichkeiten[2][0] = pos[0] + 1;
 		moglichkeiten[2][1] = pos[1] - 1;
 		moglichkeiten[3][0] = pos[0] - 1;

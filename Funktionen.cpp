@@ -1,7 +1,6 @@
 //damit der Compiler bei fopen() keinen Fehler anzeigt ("function unsafe")
 #define _CRT_SECURE_NO_DEPRECATE
 
-#include <stdio.h>
 #include <iostream>
 #include <string.h>
 
