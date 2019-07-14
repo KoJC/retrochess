@@ -12,7 +12,6 @@ bool schach(char feld[8][8], int pos[], int spieler);
 int ziehen(char feld[8][8], string befehl, int spieler)
 {
 	bool gemoved = false; //Variable, ob ein gueltiger Zug ausgefuehrt wurde
-	bool gultig = false;  //Variable, ob die eigene Figur bewegt wurde
 	bool schwarz = false;
 	int moglichkeiten[64][2]; //zweidimensionales Feld zum Speichern aller möglichen Züge
 							  //erste Dimension ist die jeweilige Möglichkeitsnummer, die zweite die Koordinaten davon
@@ -37,7 +36,6 @@ int ziehen(char feld[8][8], string befehl, int spieler)
 					{
 						if (schach(feld, pos, spieler) == false)
 						{
-							gultig = true;
 							spieler++;
 							gemoved = true;
 						}
@@ -47,10 +45,7 @@ int ziehen(char feld[8][8], string befehl, int spieler)
 					cout << "Ungueltiger Zug" << endl;
 			}
 			else
-			{
 				cout << "Figuren des Gegenspielers duerfen nicht bewegt werden" << endl;
-				gultig = false;
-			}
 		}
 
 		else if (befehl.length() == 2)
@@ -75,10 +70,11 @@ bool schach(char feld[8][8], int pos[], int spieler)
 {
 	int figurpos[2];
 	bool returnwert = false;
-	int moglichkeiten[64][2];
+	int moglichkeiten[64][2];//lokales Feld für die Bewegungsmöglichkeiten einer Figur
 	int w[2], s[2];					   //Positionen des Königs
 	char figur = feld[pos[3]][pos[2]]; //alte Figur, die evtl. geschlagen wird
-	feld[pos[3]][pos[2]] = feld[pos[1]][pos[0]];
+	
+	feld[pos[3]][pos[2]] = feld[pos[1]][pos[0]];//Ausführen des Zuges
 	feld[pos[1]][pos[0]] = '0';
 
 	for (int i = 0; i < 8; i++)

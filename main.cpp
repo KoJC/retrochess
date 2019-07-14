@@ -24,7 +24,7 @@ void eingabe();
 void remis();
 
 //globale Variable fuer das Beenden des Spieles
-bool ende = 1;
+bool ende = 0;
 bool begonnen = 0; //Varibale dafuer, dass ein Spiel gestartet wurde bzw. gerade läuft
 int spieler = 0;   //Variable, welcher Spieler gerade am zug ist; gerade = weiß, ungerade = schwarz
 
@@ -33,7 +33,7 @@ int main()
 	//Startbildschrim
 	startbildschirm();
 
-	while (ende)
+	while (not ende)
 	{
 		eingabe();
 	}
@@ -47,7 +47,7 @@ void eingabe()
 	//geändert wird, soll auch nichts passiereren. Dafuer sorgt dann die leere case-Anweisung fuer den Wert 5
 	int menupunkt = 5;
 	char feld[8][8];
-	string zug;	//string fuer den "move" und "help"-Befehl
+	string zug;	//string fuer den "move" -Befehl
 	string help;   //string fuer den "help"-befehl
 	string befehl; //Die Eingabe in die Befehlszeile
 
@@ -118,7 +118,7 @@ void eingabe()
 	switch (menupunkt)
 	{
 	case 0:
-		ende = 0;
+		ende = 1;
 		break;
 	case 1:
 		//Einlesen der Startpostítionen
